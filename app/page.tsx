@@ -1,65 +1,132 @@
+import Badge from "@/components/Badge";
+import CardCount from "@/components/CardCountDashboard";
+import { checkStatus } from "./helper/checkStatus";
+import Card from "@/components/CardCountDashboard";
+import Table from "@/components/Table";
+import { header } from "@/data/tableData";
 import Image from "next/image";
+import { title } from "process";
+// const header = ["anggota", "buku", "tgl pinjam", "jatuh tempo", "status"];
 
+interface peminjamProps {
+  id: number;
+  anggota: string;
+  buku: string;
+  tgl_pinjam: string;
+  jatuh_tempo: string;
+  status: string;
+}
+
+const data: peminjamProps[] = [
+  {
+    id: 1,
+    anggota: "Rina marlina",
+    buku: "clean code",
+    tgl_pinjam: "5 agustus 2026",
+    jatuh_tempo: "19 agustus 2026",
+    status: "dipinjam",
+  },
+  {
+    id: 2,
+    anggota: "budi santoso",
+    buku: "atomic habit",
+    tgl_pinjam: "1 agustus 2026",
+    jatuh_tempo: "15 agustus 2026",
+    status: "dipinjam",
+  },
+  {
+    id: 3,
+    anggota: "siti nurhaliza",
+    buku: "laskar pelangi",
+    tgl_pinjam: "20 juli 2026",
+    jatuh_tempo: "3 agustus 2026",
+    status: "terlambat",
+  },
+  {
+    id: 4,
+    anggota: "dewi lestari",
+    buku: "sapiens",
+    tgl_pinjam: "15 juli 2026",
+    jatuh_tempo: "29 juli 2026",
+    status: "dikembalikan",
+  },
+  {
+    id: 5,
+    anggota: "siti nurhaliza",
+    buku: "rongeng duku paruk",
+    tgl_pinjam: "10 juli 2026",
+    jatuh_tempo: "24 juli 2026",
+    status: "terlambat",
+  },
+];
+// type badgeStatus = "dipinjam" | "dikembalikan" | "terlambat";
+// const designStatus: Record<badgeStatus, string> = {
+//   dipinjam: "dipinjam",
+//   dikembalikan: "dikembalikan",
+//   terlambat: "terlambat",
+// };
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col">
+        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <p className="text-muted">Ringkasan aktivitas perpustakaan hari ini</p>
+      </div>
+
+      <div className="flex gap-5">
+        <CardCount title={"Total Angota"} sum={8} />
+        <CardCount title={"Total Buku"} sum={8} />
+        <CardCount title={"Buku Sedang Dipinjam"} sum={8} />
+        <CardCount title={"Pinjaman Terlamabat"} sum={8} />
+      </div>
+      {/* <table className=" border-2 border-muted rounded-full ">
+        <tr className="text-left bg-surface border border-muted ">
+          {header.map((items, i) => (
+            <th key={i}>{items}</th>
+          ))}
+        </tr>
+        {data.map((items, i) => (
+          <tr key={i} className="border border-muted ">
+            <td>{items.anggota}</td>
+            <td>{items.buku}</td>
+            <td>{items.tgl_pinjam}</td>
+            <td>{items.jatuh_tempo}</td>
+            <td>{items.status}</td>
+          </tr>
+        ))}
+      </table> */}
+      <Table<peminjamProps>
+        column={[
+          {
+            header: "No",
+            content: (w) => w.id,
+          },
+          {
+            header: "Anggota",
+            content: (w) => w.anggota,
+          },
+          {
+            header: "Buku",
+            content: (w) => w.buku,
+          },
+          {
+            header: "Tgl Pinjam",
+            content: (w) => w.tgl_pinjam,
+          },
+          {
+            header: "Jatuh Tempo",
+            content: (w) => w.jatuh_tempo,
+          },
+          {
+            header: "Status",
+            content: (w) => (
+              <Badge variant={checkStatus(w.status)}>{w.status}</Badge>
+            ),
+          },
+        ]}
+        data={data}
+        keyFor={(p) => String(p.id)}
+      ></Table>
     </div>
   );
 }
