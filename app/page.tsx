@@ -59,12 +59,7 @@ const data: peminjamProps[] = [
     status: "terlambat",
   },
 ];
-// type badgeStatus = "dipinjam" | "dikembalikan" | "terlambat";
-// const designStatus: Record<badgeStatus, string> = {
-//   dipinjam: "dipinjam",
-//   dikembalikan: "dikembalikan",
-//   terlambat: "terlambat",
-// };
+
 export default function Home() {
   return (
     <div className="flex flex-col gap-8">

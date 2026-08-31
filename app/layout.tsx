@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans, Inter } from "next/font/google";
 import "./globals.css";
 import SideBar from "@/components/SideBar";
+import LibraryProvider from "@/components/LibraryProvider";
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -32,11 +33,13 @@ export default function RootLayout({
       className={`${jakarta.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full overflow-x-hidden text-text bg-bg">
-        <div className="flex min-h-screen flex-row">
-          <SideBar />
+        <LibraryProvider>
+          <div className="flex min-h-screen flex-row">
+            <SideBar />
 
-          <div className="min-w-0 flex-1 p-4 bg-bg"> {children}</div>
-        </div>
+            <div className="min-w-0 flex-1 p-4 bg-bg"> {children}</div>
+          </div>
+        </LibraryProvider>
       </body>
     </html>
   );

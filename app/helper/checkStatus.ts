@@ -9,10 +9,10 @@ export function checkStatus(status: string): badgeStatus {
     return "red";
   }
 }
-export function checkStatusAnggota(status: string): badgeStatus {
-  if (status === "aktif") {
+export function checkStatusAnggota(status:boolean): badgeStatus {
+  if (status === false) {
     return "green";
   } else {
-    return "gray";
+    return "red";
   }
 }
