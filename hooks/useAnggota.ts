@@ -11,7 +11,6 @@ export interface Anggota {
 }
 
 export interface RequestAnggota {
-  no_anggota: string;
   nama: string;
   alumni: boolean;
 }
@@ -23,6 +22,15 @@ async function getAnggota(): Promise<Anggota[]> {
 
 async function postAnggota(payload: RequestAnggota): Promise<void> {
   await api.post("/anggota", payload);
+}
+async function updateAnggota(
+  id: number,
+  payload: RequestAnggota,
+): Promise<void> {
+  await api.put(`/anggota/${id}`, payload);
+}
+async function deleteAnggota(id: number): Promise<void> {
+  await api.delete(`/anggota/${id}`);
 }
 
 export function useAnggotaQuery() {
@@ -36,6 +44,21 @@ export function useCreateAnggotaMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (payload: RequestAnggota) => postAnggota(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ANGGOTA_KEY }),
+  });
+}
+export function useUpdateAnggotaMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: RequestAnggota }) =>
+      updateAnggota(id, payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ANGGOTA_KEY }),
+  });
+}
+export function useDeleteAnggotaMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => deleteAnggota(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ANGGOTA_KEY }),
   });
 }

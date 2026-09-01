@@ -2,6 +2,8 @@
 
 import { Anggota, RequestAnggota } from "@/hooks/useAnggota";
 import React, { ReactNode, useState } from "react";
+import TextField from "./TextField";
+import Button from "./Button";
 
 interface ModalProps {
   initial: Anggota | null;
@@ -16,13 +18,11 @@ export default function Modal({
   isSubmiting,
   onSubmit,
 }: ModalProps) {
-  const [noAnggota, setNoAnggota] = useState("");
-  const [nama, setNama] = useState("");
-  const [alumni, setAlumni] = useState(false);
+  const [nama, setNama] = useState(initial ? initial.nama : "");
+  const [alumni, setAlumni] = useState(initial ? initial.alumni : false);
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
-      no_anggota: noAnggota,
       nama: nama,
       alumni: alumni,
     });
@@ -35,41 +35,25 @@ export default function Modal({
             <button onClick={() => onClose()}>X</button>
             <div className="gap-7 px-8 py-5">
               <form className="flex flex-col gap-7 " onSubmit={handleSubmit}>
-                <label className="flex flex-col " htmlFor="">
-                  No. Anggota
-                  <input
-                    className="border-gray-100 border-2 "
-                    type="text"
-                    required
-                    onChange={(p) => setNoAnggota(p.target.value)}
-                  />
-                </label>
-                <label className="flex flex-col ">
-                  Nama
-                  <input
-                    className="border-gray-100 border-2"
-                    type="text"
-                    required
-                    onChange={(p) => setNama(p.target.value)}
-                  />
-                </label>
-                <label className="flex gap-3">
-                  <input
-                    className="border-gray-100 border-2"
-                    type="checkbox"
-                    checked={alumni}
-                    onClick={() => setAlumni(!alumni)}
-                  />
-                  Alumni
-                </label>
+                <TextField
+                  value={nama}
+                  onChange={(value) => setNama(value as string)}
+                  label="Nama"
+                />
+                <TextField
+                  value={alumni}
+                  onChange={(value) => setAlumni(value as boolean)}
+                  label="Alumni"
+                  type="checkbox"
+                />
                 <div className="flex justify-end">
-                  <button
+                  <Button
                     type="submit"
                     disabled={isSubmiting}
-                    className="bg-accent text-white p-2 rounded-[6px]"
+                    variant="primary"
                   >
                     {isSubmiting ? "Menyimpan..." : "Simpan"}
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>

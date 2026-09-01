@@ -7,19 +7,23 @@ import {
   Anggota,
   useAnggotaQuery,
   useCreateAnggotaMutation,
+  useDeleteAnggotaMutation,
+  useUpdateAnggotaMutation,
 } from "@/hooks/useAnggota";
-import { data } from "@/data/tableData";
+
 import { checkStatusAnggota } from "../helper/checkStatus";
 import Modal from "@/components/Modal";
+import Button from "@/components/Button";
 // import { checkStatusAnggota } from "../helper/checkStatus";
 
-export default function page() {
+export default function Page() {
   const [dataAnggota, setDataAnggota] = useState<Anggota | null | undefined>(
     undefined,
   );
   const createMutation = useCreateAnggotaMutation();
-
-  const { data, isLoading, isError } = useAnggotaQuery();
+  const updateMutation = useUpdateAnggotaMutation();
+  const deleteMutation = useDeleteAnggotaMutation();
+  const { data, isLoading } = useAnggotaQuery();
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -28,20 +32,32 @@ export default function page() {
           <p className="text-muted">Kelola data anggota perpustaakan.</p>
         </div>
         <div className="flex items-center ">
-          <button
-            onClick={() => setDataAnggota(null)}
-            className="bg-accent text-white px-4 py-2 rounded-xl"
-          >
+         
+          <Button onClick={() => setDataAnggota(null)} variant="primary">
             + Tambah Anggota
-          </button>
+          </Button>
           {dataAnggota !== undefined && (
             <Modal
-              isSubmiting={createMutation.isPending}
+              isSubmiting={createMutation.isPending || updateMutation.isPending}
               initial={dataAnggota}
               onClose={() => setDataAnggota(undefined)}
-              onSubmit={(payload)=>createMutation.mutate(payload,{
-                onSuccess:()=>setDataAnggota(undefined)
-              })}
+              onSubmit={(payload) => {
+                if (dataAnggota) {
+                  updateMutation.mutate(
+                    {
+                      id: dataAnggota.id,
+                      payload,
+                    },
+                    { onSuccess: () => setDataAnggota(undefined) },
+                  );
+                } else {
+                  createMutation.mutate(
+                    payload,
+
+                    { onSuccess: () => setDataAnggota(undefined) },
+                  );
+                }
+              }}
             />
           )}
         </div>
@@ -81,18 +97,24 @@ export default function page() {
               header: "Aksi",
               content: (c) => (
                 <div className="flex gap-3">
-                  <button
-                    onClick={() => alert(c.id)}
-                    className="border border-muted rounded-xl py-2 px-4"
-                  >
+                  <Button onClick={() => setDataAnggota(c)} variant="secondary">
                     Edit
-                  </button>
-                  <button
-                    onClick={() => alert(c.id)}
-                    className="bg-red-50 text-red-800 py-2 px-4 rounded-xl"
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      if (
+                        window.confirm(
+                          "Apakah Anda yakin ingin menghapus anggota ini?",
+                        )
+                      ) {
+                        deleteMutation.mutate(c.id);
+                      }
+                    }}
+                    variant="warning"
                   >
                     Hapus
-                  </button>
+                  </Button>
                 </div>
               ),
             },
