@@ -74,22 +74,6 @@ export default function Home() {
         <CardCount title={"Buku Sedang Dipinjam"} sum={8} />
         <CardCount title={"Pinjaman Terlamabat"} sum={8} />
       </div>
-      {/* <table className=" border-2 border-muted rounded-full ">
-        <tr className="text-left bg-surface border border-muted ">
-          {header.map((items, i) => (
-            <th key={i}>{items}</th>
-          ))}
-        </tr>
-        {data.map((items, i) => (
-          <tr key={i} className="border border-muted ">
-            <td>{items.anggota}</td>
-            <td>{items.buku}</td>
-            <td>{items.tgl_pinjam}</td>
-            <td>{items.jatuh_tempo}</td>
-            <td>{items.status}</td>
-          </tr>
-        ))}
-      </table> */}
       <Table<peminjamProps>
         column={[
           {
