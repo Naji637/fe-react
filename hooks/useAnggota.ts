@@ -15,6 +15,11 @@ export interface RequestAnggota {
   alumni: boolean;
 }
 
+export interface DashboardAnggota {
+  Id : number
+  Nama: string;
+}
+
 async function getAnggota(): Promise<Anggota[]> {
   const res = await api.get<Anggota[] | null>("/anggota");
   return res.data ?? [];
