@@ -15,11 +15,6 @@ export interface RequestAnggota {
   alumni: boolean;
 }
 
-export interface DashboardAnggota {
-  Id : number
-  Nama: string;
-}
-
 async function getAnggota(): Promise<Anggota[]> {
   const res = await api.get<Anggota[] | null>("/anggota");
   return res.data ?? [];
@@ -65,5 +60,15 @@ export function useDeleteAnggotaMutation() {
   return useMutation({
     mutationFn: (id: number) => deleteAnggota(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ANGGOTA_KEY }),
+  });
+}
+
+export function useGetAnggotaId(id: number) {
+  return useQuery<Anggota | undefined>({
+    queryKey: [...ANGGOTA_KEY, id],
+    queryFn: async () => {
+      const res = await api.get<Anggota | null>(`/anggota/${id}`);
+      return res.data ?? undefined;
+    },
   });
 }

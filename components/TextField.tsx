@@ -1,7 +1,7 @@
 import React from 'react'
 interface TextFieldProps {
-  value: string|boolean;
-  onChange: (value: string|boolean) => void;
+  value: string|boolean|number;
+  onChange?: (value: string|boolean|number) => void;
   label: string;
   type?: string;
   required?: boolean;
@@ -16,7 +16,7 @@ export default function TextField({ value, onChange, label, type, required}: Tex
           className="border-gray-100 border-2"
           type="checkbox"
           checked={value as boolean}
-          onChange={(p) => onChange(p.target.checked)}
+          onChange={(p) => onChange?.(p.target.checked)}
         />
         {label}
       </label>
@@ -27,7 +27,7 @@ export default function TextField({ value, onChange, label, type, required}: Tex
       {label}
       <input
         value={value as string}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange?.(e.target.value)}
         className="border-gray-100 border-2"
         type={type}
         required={required}

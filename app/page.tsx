@@ -3,15 +3,14 @@
 import Badge from "@/components/Badge";
 import CardCount from "@/components/CardCountDashboard";
 import { checkStatus } from "./helper/checkStatus";
-
 import Table from "@/components/Table";
 
 import { useBukuQuery } from "@/hooks/useBuku";
 import { usePinjamanQuery } from "@/hooks/usePinjaman";
 import { useAnggotaQuery } from "@/hooks/useAnggota";
-import { useState } from "react";
-// const header = ["anggota", "buku", "tgl pinjam", "jatuh tempo", "status"];
-interface TableData {
+import { useMemo } from "react";
+
+export interface TableData {
   id: number;
   anggota: string;
   buku: string;
@@ -21,22 +20,27 @@ interface TableData {
 }
 
 export default function Home() {
-  const { data: dataAnggota } = useAnggotaQuery();
-  const { data: dataBuku } = useBukuQuery();
-  const { data: dataPinjaman } = usePinjamanQuery();
-  const [tableData, setTableData] = useState<TableData[]>([]);
-  for (let i = 0; i < (dataPinjaman?.length || 0); i++) {
-    setTableData(
-      dataPinjaman?.map((p) => ({
-        id: dataPinjaman?.findIndex((a) => a.id === p.id) + 1 || 0,
-        anggota: dataAnggota?.find((a) => a.id === p.anggota_id)?.nama || "",
-        buku: dataBuku?.find((a) => a.id === p.buku_id)?.judul || "",
-        tgl_pinjam: dataPinjaman?.find((a) => a.id === p.id)?.tgl_pinjam || "",
-        jatuh_tempo: dataPinjaman?.find((a) => a.id === p.id)?.tgl_balik || "",
-        status: dataPinjaman?.find((a) => a.id === p.id)?.status || "",
-      })) || [],
-    );
-  }
+  const {
+    data: dataAnggota,
+   
+  } = useAnggotaQuery();
+  const { data: dataBuku} = useBukuQuery();
+  const {
+    data: dataPinjaman,
+    
+  } = usePinjamanQuery();
+  const tableData = useMemo<TableData[]>(() => {
+    if (!dataPinjaman) return [];
+
+    return dataPinjaman.map((p, index) => ({
+      id: index + 1,
+      anggota: dataAnggota?.find((a) => a.id === p.anggota_id)?.nama || "",
+      buku: dataBuku?.find((b) => b.id === p.buku_id)?.judul || "",
+      tgl_pinjam: p.tgl_pinjam || "",
+      jatuh_tempo: p.tgl_balik || "",
+      status: p.status || "",
+    }));
+  }, [dataPinjaman, dataAnggota, dataBuku]);
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col">
@@ -45,15 +49,23 @@ export default function Home() {
       </div>
 
       <div className="flex gap-5">
-        {/* <CardCount title={"Total Angota"} sum={8} />
-        <CardCount title={"Total Buku"} sum={8} />
-        <CardCount title={"Buku Sedang Dipinjam"} sum={8} />
-        <CardCount title={"Pinjaman Terlamabat"} sum={8} /> */}
-        <CardCount title={"Total Angota"} sum={dataAnggota?.length || 0} />
-        <CardCount title={"Total Buku"} sum={dataBuku?.length || 0} />
-        <CardCount title={"Buku Sedang Dipinjam"} sum={dataPinjaman?.filter((p) => p.status === "Dipinjam").length || 0} />
-        <CardCount title={"Pinjaman Terlambat"} sum={dataPinjaman?.filter((p) => p.status === "Terlambat").length || 0} />
+        <CardCount title="Total Anggota" sum={dataAnggota?.length || 0} />
+
+        <CardCount title="Total Buku" sum={dataBuku?.length || 0} />
+
+        <CardCount
+          title="Buku Sedang Dipinjam"
+          sum={dataPinjaman?.filter((p) => p.status === "Dipinjam").length || 0}
+        />
+
+        <CardCount
+          title="Pinjaman Terlambat"
+          sum={
+            dataPinjaman?.filter((p) => p.status === "Terlambat").length || 0
+          }
+        />
       </div>
+
       <Table<TableData>
         data={tableData}
         keyFor={(p) => String(p.id)}
@@ -85,7 +97,7 @@ export default function Home() {
             ),
           },
         ]}
-      ></Table>
+      />
     </div>
   );
 }

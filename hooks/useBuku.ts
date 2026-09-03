@@ -18,9 +18,7 @@ export interface RequestBuku {
   penulis: string;
 }
 
-export interface DashboardBuku {
-  Judul: string;
-}
+
 
 async function getBuku(): Promise<Buku[]> {
   const res = await api.get<Buku[] | null>("/buku");
@@ -64,4 +62,14 @@ export function useDeleteBukuMutation() {
     mutationFn: (id: number) => deleteBuku(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: BUKU_KEY }),
   });
+}
+
+export function useGetBukuId(id : number){
+    return useQuery<Buku | undefined>({
+      queryKey: [...BUKU_KEY, id],
+      queryFn: async () => {
+        const res = await api.get<Buku | null>(`/buku/${id}`);
+        return res.data ?? undefined;
+      },
+    });
 }
