@@ -8,11 +8,13 @@ export interface Anggota {
   no_anggota: string;
   nama: string;
   alumni: boolean;
+  klasifikasi_anggota_id: number;
 }
 
 export interface RequestAnggota {
   nama: string;
   alumni: boolean;
+  klasifikasi_anggota_id: number;
 }
 
 async function getAnggota(): Promise<Anggota[]> {
@@ -70,5 +72,17 @@ export function useGetAnggotaId(id: number) {
       const res = await api.get<Anggota | null>(`/anggota/${id}`);
       return res.data ?? undefined;
     },
+  });
+}
+
+async function getNoAnggota(noAnggota: string): Promise<Anggota | null> {
+  const res = await api.get(`/anggota/search?q=${noAnggota}`);
+  return res.data;
+}
+export function useGetNoAnggotaQuery(noAnggota: string) {
+  return useQuery<Anggota | null>({
+    queryKey: [...ANGGOTA_KEY, noAnggota],
+    queryFn: () => getNoAnggota(noAnggota),
+    enabled: noAnggota.length === 4,
   });
 }

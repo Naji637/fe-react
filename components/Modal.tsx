@@ -4,6 +4,8 @@ import { Anggota, RequestAnggota } from "@/hooks/useAnggota";
 import React, { ReactNode, useState } from "react";
 import TextField from "./TextField";
 import Button from "./Button";
+import { useGetKlasifikasiAnggotaQuery } from "@/hooks/useKlasifikasiAnggota";
+import SelectBox from "./SelectBox";
 
 interface ModalProps {
   initial: Anggota | null;
@@ -20,12 +22,20 @@ export default function Modal({
 }: ModalProps) {
   const [nama, setNama] = useState(initial ? initial.nama : "");
   const [alumni, setAlumni] = useState(initial ? initial.alumni : false);
+  const [klasifikasiAnggotaId, setKlasifikasiAnggotaId] = useState(
+    initial ? initial.klasifikasi_anggota_id : 0,
+  );
+  const { data, isLoading } = useGetKlasifikasiAnggotaQuery();
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
       nama: nama,
       alumni: alumni,
+      klasifikasi_anggota_id: klasifikasiAnggotaId,
     });
+  }
+  if (isLoading) {
+    return <div className="p-5">loading...</div>;
   }
   return (
     <div className="p-5 ">
@@ -46,6 +56,7 @@ export default function Modal({
                   label="Alumni"
                   type="checkbox"
                 />
+                <SelectBox data={data} label="Klasifikasi Anggota"/>
                 <div className="flex justify-end">
                   <Button
                     type="submit"

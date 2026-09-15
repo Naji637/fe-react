@@ -9,6 +9,10 @@ export interface Pinjaman {
   buku_id: number;
   tgl_pinjam: string;
   tgl_balik: string;
+  petugas_pinjam_id: number;
+  petugas_balik_id: number;
+  kondisi_awal_id: number;
+  kondisi_akhir_id: number;
   status: string;
 }
 

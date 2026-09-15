@@ -4,8 +4,9 @@ import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 import ModalPinjaman from "@/components/ModalPinjaman";
 import Table from "@/components/Table";
+import TextField from "@/components/TextField";
+import { useGetNoAnggotaQuery } from "@/hooks/useAnggota";
 import {
-  DisplayPinjaman,
   Pinjaman,
   useCreatePinjamanMutation,
   useDeletePinjamanMutation,
@@ -17,10 +18,14 @@ export default function Page() {
   const [dataPinjaman, setDataPinjaman] = useState<Pinjaman | null | undefined>(
     undefined,
   );
+  const [kodeBuku, setKodeBuku] = useState("");
+  const [noAnggota, setNoAnggota] = useState("");
+  const dataAnggota = useGetNoAnggotaQuery(noAnggota);
   const createMutation = useCreatePinjamanMutation();
   const updateMutation = useUpdatePinjamanMutation();
   const deleteMutation = useDeletePinjamanMutation();
   const { data, isLoading } = usePinjamanQuery();
+
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -29,10 +34,10 @@ export default function Page() {
           <p className="text-muted">Kelola data pinjaman perpustaakan.</p>
         </div>
         <div className="flex items-center ">
-          <Button onClick={() => setDataPinjaman(null)} variant="primary">
+          {/* <Button onClick={() => setDataPinjaman(null)} variant="primary">
             + Tambah Pinjaman
-          </Button>
-          {dataPinjaman !== undefined && (
+          </Button> */}
+          {/* {dataPinjaman !== undefined && (
             <ModalPinjaman
               isSubmiting={createMutation.isPending || updateMutation.isPending}
               initial={dataPinjaman}
@@ -55,7 +60,7 @@ export default function Page() {
                 }
               }}
             />
-          )}
+          )} */}
         </div>
       </div>
       {isLoading && (
@@ -63,66 +68,96 @@ export default function Page() {
           <h1>sedang menunggu data</h1>
         </div>
       )}
-      {!isLoading && (
-        <Table<Pinjaman>
-          data={data ?? []}
-          keyFor={(p) => String(p.id)}
-          column={[
-            {
-              header: "No",
-              content: (c) => c.id,
-            },
-            {
-              header: "Nama",
-              content: (c) => c.anggota_id,
-            },
-            {
-              header: "judul",
-              content: (c) => c.buku_id,
-            },
-            {
-              header: "Tanggal Pinjam",
-              content: (c) => c.tgl_pinjam,
-            },
-            {
-              header: "Tanggal Balik",
-              content: (c) => c.tgl_balik,
-            },
-            {
-              header: "Status",
-              content: (c) => c.status,
-            },
-            {
-              header: "Aksi",
-              content: (c) => (
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => setDataPinjaman(c)}
-                    variant="secondary"
-                  >
-                    Edit
-                  </Button>
-
-                  <Button
-                    onClick={() => {
-                      if (
-                        window.confirm(
-                          "Apakah Anda yakin ingin menghapus anggota ini?",
-                        )
-                      ) {
-                        deleteMutation.mutate(c.id);
-                      }
-                    }}
-                    variant="warning"
-                  >
-                    Hapus
-                  </Button>
-                </div>
-              ),
-            },
-          ]}
-        ></Table>
-      )}
+      <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-5 w-1/4">
+          <div>
+            <TextField
+              label="No. Anggota"
+              value={noAnggota}
+              onChange={(value) => {
+                setNoAnggota(value as string);
+              }}
+            />
+          </div>
+          <div>
+            <TextField
+              label={"Kode Buku"}
+              value={kodeBuku}
+              onChange={(value) => {
+                setKodeBuku(value as string);
+              }}
+            />
+          </div>
+        </div>
+        <div>
+          <Table<Pinjaman>
+            data={data ?? []}
+            keyFor={(p) => String(p.id)}
+            column={[]}
+          ></Table>
+        </div>
+      </div>
     </div>
   );
 }
+
+// {!isLoading && (
+//   <Table<Pinjaman>
+//     data={data ?? []}
+//     keyFor={(p) => String(p.id)}
+//     column={[
+//       {
+//         header: "No",
+//         content: (c) => c.id,
+//       },
+//       {
+//         header: "Nama",
+//         content: (c) => c.anggota_id,
+//       },
+//       {
+//         header: "judul",
+//         content: (c) => c.buku_id,
+//       },
+//       {
+//         header: "Tanggal Pinjam",
+//         content: (c) => c.tgl_pinjam,
+//       },
+//       {
+//         header: "Tanggal Balik",
+//         content: (c) => c.tgl_balik,
+//       },
+//       {
+//         header: "Status",
+//         content: (c) => c.status,
+//       },
+//       {
+//         header: "Aksi",
+//         content: (c) => (
+//           <div className="flex gap-3">
+//             <Button
+//               onClick={() => setDataPinjaman(c)}
+//               variant="secondary"
+//             >
+//               Edit
+//             </Button>
+
+//             <Button
+//               onClick={() => {
+//                 if (
+//                   window.confirm(
+//                     "Apakah Anda yakin ingin menghapus anggota ini?",
+//                   )
+//                 ) {
+//                   deleteMutation.mutate(c.id);
+//                 }
+//               }}
+//               variant="warning"
+//             >
+//               Hapus
+//             </Button>
+//           </div>
+//         ),
+//       },
+//     ]}
+//   ></Table>
+// )}

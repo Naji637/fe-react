@@ -1,6 +1,6 @@
 "use client";
 
-import {  Pinjaman, RequestPinjaman } from "@/hooks/usePinjaman";
+import { Pinjaman, RequestPinjaman } from "@/hooks/usePinjaman";
 import React, { ReactNode, useState } from "react";
 import TextField from "./TextField";
 import Button from "./Button";
@@ -26,6 +26,18 @@ export default function ModalPinjaman({
   const [status, setStatus] = useState(initial ? initial.status : "");
   const [tglBalik, setTglBalik] = useState(initial ? initial.tgl_balik : "");
   const [tglPinjam, setTglPinjam] = useState(initial ? initial.tgl_pinjam : "");
+  const [petugasPinjam, setPetugasPinjam] = useState(
+    initial ? initial.petugas_pinjam_id : 0,
+  );
+  const [petugasBalik, setPetugasBalik] = useState(
+    initial ? initial.petugas_balik_id : 0,
+  );
+  const [kondisiAwal, setKondisiAwal] = useState(
+    initial ? initial.kondisi_awal_id : 0,
+  );
+  const [kondisiAkhir, setKondisiAkhir] = useState(
+    initial ? initial.kondisi_akhir_id : 0,
+  );
   const currentAnggota = useGetAnggotaId(anggotaId);
   const currentBuku = useGetBukuId(bukuId);
 
@@ -69,7 +81,8 @@ export default function ModalPinjaman({
                     type="text"
                     className="border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full h-fit"
                     placeholder="nama anggota"
-                    value={currentAnggota?.data?.nama}
+                    value={currentAnggota?.data?.nama ?? ""}
+                    // onChange={(e) => currentAnggota.data?.nama}
                     readOnly
                   />
                   <input
@@ -77,6 +90,7 @@ export default function ModalPinjaman({
                     className="border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full h-fit"
                     placeholder="nama buku"
                     value={currentBuku?.data?.judul}
+                    // onChange={(e) => currentBuku.data?.judul}
                     readOnly
                   />
                 </div>
@@ -88,10 +102,12 @@ export default function ModalPinjaman({
                 <TextField
                   value={String(currentAnggota.data?.nama)}
                   label="Nama Anggota"
+                  onChange={(e) => {}}
                 />
                 <TextField
                   value={currentBuku.data?.judul as string}
                   label="Judul"
+                  onChange={(e) => {}}
                 />
                 <TextField
                   value={tglPinjam}
@@ -107,6 +123,26 @@ export default function ModalPinjaman({
                   value={status}
                   onChange={(value) => setStatus(value as string)}
                   label="Status"
+                />
+                <TextField
+                  value={petugasPinjam}
+                  onChange={(value) => setPetugasPinjam(value as number)}
+                  label="Petugas Pinjam"
+                />
+                <TextField
+                  value={petugasBalik}
+                  onChange={(value) => setPetugasBalik(value as number)}
+                  label="Petugas Balik"
+                />
+                <TextField
+                  value={kondisiAwal}
+                  onChange={(value) => setKondisiAwal(value as number)}
+                  label="Kondisi Awal"
+                />
+                <TextField
+                  value={kondisiAkhir}
+                  onChange={(value) => setKondisiAkhir(value as number)}
+                  label="Kondisi Akhir"
                 />
                 <div className="flex justify-end">
                   <Button

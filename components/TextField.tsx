@@ -1,14 +1,18 @@
-import React from 'react'
+import React from "react";
 interface TextFieldProps {
-  value: string|boolean|number;
-  onChange?: (value: string|boolean|number) => void;
+  value: string | boolean | number;
+  onChange?: (value: string | boolean | number) => void;
   label: string;
   type?: string;
   required?: boolean;
-
-  
 }
-export default function TextField({ value, onChange, label, type, required}: TextFieldProps) {
+export default function TextField({
+  value,
+  onChange,
+  label,
+  type,
+  required,
+}: TextFieldProps) {
   if (type === "checkbox") {
     return (
       <label className="flex gap-3">
@@ -31,8 +35,7 @@ export default function TextField({ value, onChange, label, type, required}: Tex
         className="border-gray-100 border-2"
         type={type}
         required={required}
-        
       />
     </label>
-  )
+  );
 }
