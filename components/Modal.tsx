@@ -23,17 +23,20 @@ export default function Modal({
   const [nama, setNama] = useState(initial ? initial.nama : "");
   const [alumni, setAlumni] = useState(initial ? initial.alumni : false);
   const [klasifikasiAnggotaId, setKlasifikasiAnggotaId] = useState(
-    initial ? initial.klasifikasi_anggota_id : 0,
+    initial ? String(initial.klasifikasi_anggota_id) : "1",
   );
+  // const [klasifikasiAnggotaId,setKlasifikasiAnggotaId]=useState("2")
   const { data, isLoading } = useGetKlasifikasiAnggotaQuery();
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
       nama: nama,
       alumni: alumni,
-      klasifikasi_anggota_id: klasifikasiAnggotaId,
+      klasifikasi_anggota_id: Number(klasifikasiAnggotaId),
     });
+    //  console.log(typeof(klasifikasiAnggotaId))
   }
+
   if (isLoading) {
     return <div className="p-5">loading...</div>;
   }
@@ -56,7 +59,14 @@ export default function Modal({
                   label="Alumni"
                   type="checkbox"
                 />
-                <SelectBox data={data} label="Klasifikasi Anggota"/>
+                <SelectBox
+                  value={klasifikasiAnggotaId}
+                  onChange={(value) => {
+                    setKlasifikasiAnggotaId(value);
+                  }}
+                  data={data}
+                  label="Klasifikasi Anggota"
+                />
                 <div className="flex justify-end">
                   <Button
                     type="submit"

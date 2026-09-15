@@ -3,21 +3,25 @@ import React from "react";
 
 interface SelectBoxProps {
   label: string;
-  onChange?: (value: string | number) => void;
+  onChange?: (value: string) => void;
   data: any;
+  value: string;
 }
 
-export default function SelectBox({
-  label,
-  onChange,
-  data,
-}: SelectBoxProps) {
+export default function SelectBox({ label, onChange, data ,value}: SelectBoxProps) {
   return (
     <label className="flex flex-col">
       {label}
-      <select>
+      <select
+        value={value}
+        onChange={(p) => {
+          onChange?.(p.target.value);
+        }}
+      >
         {data.map((item: any) => (
-          <option value={item.id}>{item.klasifikasi}</option>
+          <option key={item.id} value={item.id}>
+            {item.klasifikasi}
+          </option>
         ))}
       </select>
     </label>
