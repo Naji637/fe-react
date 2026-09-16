@@ -8,11 +8,17 @@ interface SelectBoxProps {
   value: string;
 }
 
-export default function SelectBox({ label, onChange, data ,value}: SelectBoxProps) {
+export default function SelectBox({
+  label,
+  onChange,
+  data,
+  value,
+}: SelectBoxProps) {
   return (
-    <label className="flex flex-col">
+    <label className="flex flex-col ">
       {label}
       <select
+        className="border-gray-100 border-2 rounded-md px-2 py-1 "
         value={value}
         onChange={(p) => {
           onChange?.(p.target.value);
@@ -20,7 +26,7 @@ export default function SelectBox({ label, onChange, data ,value}: SelectBoxProp
       >
         {data.map((item: any) => (
           <option key={item.id} value={item.id}>
-            {item.klasifikasi}
+            {String(item.klasifikasi).toUpperCase()}
           </option>
         ))}
       </select>

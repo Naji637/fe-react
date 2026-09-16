@@ -2,7 +2,7 @@ import React from "react";
 interface TextFieldProps {
   value: string | boolean | number;
   onChange?: (value: string | boolean | number) => void;
-  label: string;
+  label?: string;
   type?: string;
   required?: boolean;
 }
@@ -17,7 +17,8 @@ export default function TextField({
     return (
       <label className="flex gap-3">
         <input
-          className="border-gray-100 border-2"
+          className="
+         border-gray-100 border-2"
           type="checkbox"
           checked={value as boolean}
           onChange={(p) => onChange?.(p.target.checked)}
@@ -27,12 +28,12 @@ export default function TextField({
     );
   }
   return (
-    <label className="flex flex-col">
+    <label className="flex flex-col ">
       {label}
       <input
         value={value as string}
         onChange={(e) => onChange?.(e.target.value)}
-        className="border-gray-100 border-2"
+        className=" bg-white border-gray-100 border-2  px-2 py-1 rounded-md"
         type={type}
         required={required}
       />

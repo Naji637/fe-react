@@ -6,26 +6,16 @@ import ModalPinjaman from "@/components/ModalPinjaman";
 import Table from "@/components/Table";
 import TextField from "@/components/TextField";
 import { useGetNoAnggotaQuery } from "@/hooks/useAnggota";
-import {
-  Pinjaman,
-  useCreatePinjamanMutation,
-  useDeletePinjamanMutation,
-  usePinjamanQuery,
-  useUpdatePinjamanMutation,
-} from "@/hooks/usePinjaman";
+import { Buku, Pinjaman, usePinjamanQuery } from "@/hooks/usePinjaman";
 import React, { useState } from "react";
 export default function Page() {
-  const [dataPinjaman, setDataPinjaman] = useState<Pinjaman | null | undefined>(
-    undefined,
-  );
-  const [kodeBuku, setKodeBuku] = useState("");
+  // const [dataPinjaman, setDataPinjaman] = useState<Pinjaman | null | undefined>(
+  //   undefined,
+  // );
   const [noAnggota, setNoAnggota] = useState("");
-  const dataAnggota = useGetNoAnggotaQuery(noAnggota);
-  const createMutation = useCreatePinjamanMutation();
-  const updateMutation = useUpdatePinjamanMutation();
-  const deleteMutation = useDeletePinjamanMutation();
-  const { data, isLoading } = usePinjamanQuery();
-
+  console.log(noAnggota);
+  const { data, isLoading } = usePinjamanQuery(noAnggota);
+  const bukuBuku = data?.buku;
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -69,7 +59,7 @@ export default function Page() {
         </div>
       )}
       <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-5 w-1/4">
+        <div className="flex flex-col gap-5 w-1/8">
           <div>
             <TextField
               label="No. Anggota"
@@ -78,23 +68,22 @@ export default function Page() {
                 setNoAnggota(value as string);
               }}
             />
+            <div className="mt-2">
+              {data?.nama === undefined && <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">Nama</div>}
+              {data?.nama !== undefined && <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">{data.nama}</div>}
+            </div>
           </div>
-          <div>
-            <TextField
-              label={"Kode Buku"}
-              value={kodeBuku}
-              onChange={(value) => {
-                setKodeBuku(value as string);
-              }}
-            />
+          <div className="w-screen">
+            <Table<Buku>
+              data={bukuBuku ?? []}
+              keyFor={(p) => String(p.id)}
+              column={[
+                { header: "No", content: (c) => c.id },
+                { header: "Judul", content: (c) => c.judul },
+                { header: "Tanggal Pinjam", content: (c) => c.tgl_pinjam },
+              ]}
+            ></Table>
           </div>
-        </div>
-        <div>
-          <Table<Pinjaman>
-            data={data ?? []}
-            keyFor={(p) => String(p.id)}
-            column={[]}
-          ></Table>
         </div>
       </div>
     </div>
