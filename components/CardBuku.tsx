@@ -1,6 +1,5 @@
 import React, { use } from 'react';
 
-// Interface sesuai kolom database
 import { Buku } from '@/hooks/useBuku';
 
 interface BukuCardProps {
@@ -11,8 +10,6 @@ interface BukuCardProps {
 
 export const BukuCard: React.FC<BukuCardProps> = ({ buku, onEdit, onDelete }) => {
   const { id, judul, list_kategori_id, stock, penulis } = buku;
-
-  // Format kategori ID (baik single ID maupun array ID)
   const kategoriDisplay = Array.isArray(list_kategori_id)
     ? list_kategori_id.join(', ')
     : list_kategori_id;

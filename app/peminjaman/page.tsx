@@ -2,7 +2,7 @@
 
 import Badge from "@/components/Badge";
 import Button from "@/components/Button";
-import ModalPinjaman from "@/components/ModalPinjaman";
+// import ModalPinjaman from "@/components/ModalPinjaman";
 import Table from "@/components/Table";
 import TextField from "@/components/TextField";
 import { useGetNoAnggotaQuery } from "@/hooks/useAnggota";

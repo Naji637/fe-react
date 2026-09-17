@@ -1,10 +1,15 @@
 import { it } from "node:test";
 import React from "react";
 
+export interface DataProps {
+  value: string;
+  label: string;
+}
+
 interface SelectBoxProps {
   label: string;
   onChange?: (value: string) => void;
-  data: any;
+  data: DataProps[];
   value: string;
 }
 
@@ -24,9 +29,9 @@ export default function SelectBox({
           onChange?.(p.target.value);
         }}
       >
-        {data.map((item: any) => (
-          <option key={item.id} value={item.id}>
-            {String(item.klasifikasi).toUpperCase()}
+        {data.map((item: DataProps) => (
+          <option key={item.value} value={item.value}>
+            {String(item.label).toUpperCase()}
           </option>
         ))}
       </select>
