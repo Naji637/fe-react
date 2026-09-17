@@ -12,8 +12,7 @@ export default function Page() {
   // const [dataPinjaman, setDataPinjaman] = useState<Pinjaman | null | undefined>(
   //   undefined,
   // );
-  const [noAnggota, setNoAnggota] = useState("");
-  console.log(noAnggota);
+  const [noAnggota, setNoAnggota] = useState<string>("");
   const { data, isLoading } = usePinjamanQuery(noAnggota);
   const bukuBuku = data?.buku;
   return (
@@ -69,8 +68,16 @@ export default function Page() {
               }}
             />
             <div className="mt-2">
-              {data?.nama === undefined && <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">Nama</div>}
-              {data?.nama !== undefined && <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">{data.nama}</div>}
+              {data?.nama === undefined && (
+                <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">
+                  Nama
+                </div>
+              )}
+              {data?.nama !== undefined && (
+                <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">
+                  {data.nama}
+                </div>
+              )}
             </div>
           </div>
           <div className="w-screen">

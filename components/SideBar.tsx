@@ -39,7 +39,7 @@ export default function SideBar() {
   return (
     <>
       <aside
-        className={`relative shrink-0 border-muted/20 bg-surface flex flex-col gap-6 p-5 ${collapsed ? "w-[76px]" : "w-64"} `}
+        className={`relative shrink-0 border-muted/20 bg-surface flex flex-col gap-6 p-5 ${collapsed ? "w-19" : "w-64"} `}
       >
         <div className="flex items-center gap-2 flex-row justify-between px-1">
           <div
