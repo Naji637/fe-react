@@ -33,18 +33,18 @@ export function usePinjamanQuery(noAnggota: string) {
 
 
 
-// export interface Pinjaman {
-//   id: number;
-//   anggota_id: number;
-//   buku_id: number;
-//   tgl_pinjam: string;
-//   tgl_balik: string;
-//   petugas_pinjam_id: number;
-//   petugas_balik_id: number;
-//   kondisi_awal_id: number;
-//   kondisi_akhir_id: number;
-//   status: string;
-// }
+export interface Pinjamann {
+  id: number;
+  anggota_id: number;
+  buku_id: number;
+  tgl_pinjam: string;
+  tgl_balik: string;
+  petugas_pinjam_id: number;
+  petugas_balik_id: number;
+  kondisi_awal_id: number;
+  kondisi_akhir_id: number;
+  status: string;
+}
 
 // export interface DisplayPinjaman {
 //   id: number;
@@ -63,10 +63,27 @@ export function usePinjamanQuery(noAnggota: string) {
 //   status: string;
 // }
 
-// async function getPinjaman(): Promise<Pinjaman[]> {
-//   const res = await api.get<Pinjaman[] | null>("/pinjaman");
-//   return res.data ?? [];
-// }
+async function getPinjaman(): Promise<Pinjamann[]> {
+  const res = await api.get<Pinjamann[] | null>("/pinjaman");
+  return res.data ?? [];
+}export interface Pinjaman {
+  id: number;
+  anggota_id: number;
+  buku_id: number;
+  tgl_pinjam: string;
+  tgl_balik: string;
+  petugas_pinjam_id: number;
+  petugas_balik_id: number;
+  kondisi_awal_id: number;
+  kondisi_akhir_id: number;
+  status: string;
+}
+export function usePinjamanQueryy() {
+  return useQuery<Pinjamann[]>({
+    queryKey: PINJAMAN_KEY,
+    queryFn: getPinjaman,
+  });
+}
 // async function postPinjaman(payload: RequestPinjaman): Promise<void> {
 //   await api.post("/pinjaman", payload);
 // }
@@ -80,12 +97,7 @@ export function usePinjamanQuery(noAnggota: string) {
 //   await api.delete(`/pinjaman/${id}`);
 // }
 
-// export function usePinjamanQuery() {
-//   return useQuery<Pinjaman[]>({
-//     queryKey: PINJAMAN_KEY,
-//     queryFn: getPinjaman,
-//   });
-// }
+
 // export function useCreatePinjamanMutation() {
 //   const queryClient = useQueryClient();
 //   return useMutation({

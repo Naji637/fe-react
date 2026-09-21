@@ -2,46 +2,59 @@
 
 import Button from "@/components/Button";
 import { BukuCard } from "@/components/CardBuku";
-import Modal from "@/components/Modal";
 import ModalBuku from "@/components/ModalBuku";
 import {
   Buku,
-  RequestBuku,
   useBukuQuery,
   useCreateBukuMutation,
   useDeleteBukuMutation,
   useUpdateBukuMutation,
-  // useUpdateBukuMutation,
 } from "@/hooks/useBuku";
 import React, { useState } from "react";
 
 export default function Page() {
   const { data, isLoading } = useBukuQuery();
   const deleteMutation = useDeleteBukuMutation();
-  const [dataBuku, setDataBuku] = useState<Buku | null | undefined>(undefined);
   const createMutation = useCreateBukuMutation();
   const updateMutation = useUpdateBukuMutation();
-  console.log("data buku",dataBuku)
+
+  const [dataBuku, setDataBuku] = useState<Buku | null | undefined>(undefined);
+
   if (isLoading) {
-    return <div className="p-4 text-center">Memuat data buku...</div>;
+    return (
+      <div className="flex min-h-[400px] items-center justify-center text-sm font-medium text-slate-500">
+        Memuat data buku...
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-        <div className="flex items-center ">
-          <Button onClick={() => setDataBuku(null)} variant="primary">
-            + Tambah Anggota
-          </Button>
+    <div className="mx-auto max-w-7xl p-6">
+      {/* Header Bar */}
+      <div className="mb-6 flex items-center justify-between border-b border-slate-200 pb-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-800">
+            Daftar Buku
+          </h1>
         </div>
+        <Button onClick={() => setDataBuku(null)} variant="primary">
+          + Tambah Buku
+        </Button>
+      </div>
+
+      {/* Grid Layout Buku */}
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {data?.map((buku) => (
           <BukuCard
             key={buku.id}
             buku={buku}
+            onEdit={(item) => setDataBuku(item)}
             onDelete={(id) => deleteMutation.mutate(id)}
           />
         ))}
       </div>
+
+      {/* Modal Form */}
       {dataBuku !== undefined && (
         <ModalBuku
           initial={dataBuku}
@@ -50,13 +63,8 @@ export default function Page() {
           onSubmit={(payload) => {
             if (dataBuku) {
               updateMutation.mutate(
-                {
-                  id: dataBuku.id,
-                  payload,
-                },
-                {
-                  onSuccess: () => setDataBuku(undefined),
-                },
+                { id: dataBuku.id, payload },
+                { onSuccess: () => setDataBuku(undefined) },
               );
             } else {
               createMutation.mutate(payload, {
