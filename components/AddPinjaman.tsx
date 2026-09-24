@@ -9,34 +9,43 @@
 
 // interface ModalProps {
 //   initial: Pinjaman | null;
-//   onClose: () => void;
+
 //   isSubmiting: boolean;
 //   onSubmit: (payload: RequestPinjaman) => void;
 // }
 
 // export default function ModalPinjaman({
-//   onClose,
 //   initial,
 //   isSubmiting,
 //   onSubmit,
 // }: ModalProps) {
-//   const [anggotaId, setAnggotaId] = useState(initial ? initial.anggota_id : 0);
-//   const [bukuId, setBukuId] = useState(initial ? initial.buku_id : 0);
+//   const [anggotaId, setAnggotaId] = useState(
+//     initial ? initial.requestPinjaman.anggota_id : 0,
+//   );
+//   const [bukuId, setBukuId] = useState(
+//     initial ? initial.requestPinjaman.buku_id : 0,
+//   );
 
-//   const [status, setStatus] = useState(initial ? initial.status : "");
-//   const [tglBalik, setTglBalik] = useState(initial ? initial.tgl_balik : "");
-//   const [tglPinjam, setTglPinjam] = useState(initial ? initial.tgl_pinjam : "");
+//   const [status, setStatus] = useState(
+//     initial ? initial.requestPinjaman.status : "",
+//   );
+//   const [tglBalik, setTglBalik] = useState(
+//     initial ? initial.requestPinjaman.tgl_balik : "",
+//   );
+//   const [tglPinjam, setTglPinjam] = useState(
+//     initial ? initial.requestPinjaman.tgl_pinjam : "",
+//   );
 //   const [petugasPinjam, setPetugasPinjam] = useState(
-//     initial ? initial.petugas_pinjam_id : 0,
+//     initial ? initial.requestPinjaman.petugas_pinjam_id : 0,
 //   );
 //   const [petugasBalik, setPetugasBalik] = useState(
-//     initial ? initial.petugas_balik_id : 0,
+//     initial ? initial.requestPinjaman.petugas_balik_id : 0,
 //   );
 //   const [kondisiAwal, setKondisiAwal] = useState(
-//     initial ? initial.kondisi_awal_id : 0,
+//     initial ? initial.requestPinjaman.kondisi_awal_id : 0,
 //   );
 //   const [kondisiAkhir, setKondisiAkhir] = useState(
-//     initial ? initial.kondisi_akhir_id : 0,
+//     initial ? initial.requestPinjaman.kondisi_akhir_id : 0,
 //   );
 //   const currentAnggota = useGetAnggotaId(anggotaId);
 //   const currentBuku = useGetBukuId(bukuId);
@@ -49,6 +58,10 @@
 //       status: status,
 //       tgl_pinjam: tglPinjam,
 //       tgl_balik: tglBalik,
+//       petugas_pinjam_id: petugasPinjam,
+//       kondisi_akhir_id: kondisiAkhir,
+//       kondisi_awal_id: kondisiAwal,
+//       petugas_balik_id: petugasBalik,
 //     });
 //   }
 //   return (
@@ -56,7 +69,6 @@
 //       {
 //         <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-black/40 ">
 //           <div className="bg-white p-5 rounded-[8px] min-w-75 ">
-//             <button onClick={() => onClose()}>X</button>
 //             <div className="flex flex-col gap-7 px-8 py-5">
 //               <div className="grid grid-cols-2 w-full gap-5">
 //                 <div className="grid">

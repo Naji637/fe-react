@@ -13,7 +13,7 @@ interface ModalBukuProps {
 }
 
 function convertToDataSelect(data: ListKategori[]): DataProps[] {
-  let dataSelectBox: DataProps[] = [];
+  const dataSelectBox: DataProps[] = [];
   data.map((item) => {
     dataSelectBox.push({ label: item.kategori, value: String(item.id) });
   });

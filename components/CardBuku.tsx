@@ -1,22 +1,20 @@
 import React, { use } from "react";
 
 import { Buku } from "@/hooks/useBuku";
+import { useListKategoriQuery } from "@/hooks/useListKategori";
 
 interface BukuCardProps {
   buku: Buku;
-  onEdit?: (buku: Buku) => void;
-  onDelete?: (id: number) => void;
+  updateBuku?: (buku: Buku) => void;
+  hapusBuku?: (id: number) => void;
 }
 
-export const BukuCard: React.FC<BukuCardProps> = ({
-  buku,
-  onEdit,
-  onDelete,
-}) => {
+export function BukuCard({ buku, updateBuku, hapusBuku }: BukuCardProps) {
   const { id, judul, list_kategori_id, stock, penulis } = buku;
-  const kategoriDisplay = Array.isArray(list_kategori_id)
-    ? list_kategori_id.join(", ")
-    : list_kategori_id;
+  const { data: dataListKategori } = useListKategoriQuery();
+  const kategori = dataListKategori?.find(
+    (value) => value.id === list_kategori_id,
+  );
 
   return (
     <div className="max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
@@ -40,33 +38,31 @@ export const BukuCard: React.FC<BukuCardProps> = ({
           <span className="font-medium text-gray-500">Penulis:</span> {penulis}
         </p>
         <p>
-          <span className="font-medium text-gray-500">ID Kategori:</span>{" "}
+          <span className="font-medium text-gray-500">Kategori:</span>{" "}
           <span className="inline-block bg-gray-100 px-2 py-0.5 rounded text-xs font-mono">
-            {kategoriDisplay}
+            {kategori?.kategori}
           </span>
         </p>
       </div>
 
-      {(onEdit || onDelete) && (
-        <div className="flex justify-end gap-2 pt-3 border-t border-gray-100">
-          {onEdit && (
-            <button
-              onClick={() => onEdit(buku)}
-              className="px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-            >
-              Edit
-            </button>
-          )}
-          {onDelete && (
-            <button
-              onClick={() => onDelete(id)}
-              className="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
-            >
-              Hapus
-            </button>
-          )}
-        </div>
-      )}
+      <div className="flex justify-end gap-2 pt-3 border-t border-gray-100 ">
+        {updateBuku && (
+          <button
+            onClick={() => updateBuku(buku)}
+            className="px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+          >
+            Edit
+          </button>
+        )}
+        {hapusBuku && (
+          <button
+            onClick={() => hapusBuku(id)}
+            className="px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors"
+          >
+            Hapus
+          </button>
+        )}
+      </div>
     </div>
   );
-};
+}

@@ -22,7 +22,7 @@ export default function Page() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center text-sm font-medium text-slate-500">
+      <div className="flex min-h-100 items-center justify-center text-sm font-medium text-slate-500">
         Memuat data buku...
       </div>
     );
@@ -30,7 +30,7 @@ export default function Page() {
 
   return (
     <div className="mx-auto max-w-7xl p-6">
-      {/* Header Bar */}
+     
       <div className="mb-6 flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-800">
@@ -42,19 +42,17 @@ export default function Page() {
         </Button>
       </div>
 
-      {/* Grid Layout Buku */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {data?.map((buku) => (
           <BukuCard
             key={buku.id}
             buku={buku}
-            onEdit={(item) => setDataBuku(item)}
-            onDelete={(id) => deleteMutation.mutate(id)}
+            updateBuku={(item) => setDataBuku(item)}
+            hapusBuku={(id) => deleteMutation.mutate(id)}
           />
         ))}
       </div>
 
-      {/* Modal Form */}
       {dataBuku !== undefined && (
         <ModalBuku
           initial={dataBuku}

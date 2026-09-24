@@ -35,6 +35,7 @@ async function deleteAnggota(id: number): Promise<void> {
   await api.delete(`/anggota/${id}`);
 }
 
+
 export function useAnggotaQuery() {
   return useQuery<Anggota[]>({
     queryKey: ANGGOTA_KEY,

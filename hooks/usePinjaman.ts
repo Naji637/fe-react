@@ -16,12 +16,28 @@ export interface Pinjaman {
   boleh_pinjam: boolean;
   buku: Buku[];
 }
+export interface RequestPinjaman {
+  anggota_id: number;
+  buku_id: number;
+  petugas_pinjam_id: number | null;
+  petugas_balik_id: number | null;
+  kondisi_awal_id: number;
+  kondisi_akhir_id: number;
+  status: string;
+}
 
 async function getPinjamanByNoAnngota(
   noAnggota: string,
 ): Promise<Pinjaman | null> {
   const res = await api.get<Pinjaman | null>(`/pinjaman/${noAnggota}`);
   return res.data ?? null;
+}
+async function getBukuByBarcode(barcode: string): Promise<Buku | null> {
+  const res = await api.get<Buku | null>(`/buku/search?q=${barcode}`);
+  return res.data ?? null;
+}
+async function postPinjaman(payload: RequestPinjaman): Promise<void> {
+  await api.post("/pinjaman", payload);
 }
 export function usePinjamanQuery(noAnggota: string) {
   return useQuery<Pinjaman | null>({
@@ -30,20 +46,19 @@ export function usePinjamanQuery(noAnggota: string) {
     enabled: noAnggota.length === 4,
   });
 }
-
-
-
-export interface Pinjamann {
-  id: number;
-  anggota_id: number;
-  buku_id: number;
-  tgl_pinjam: string;
-  tgl_balik: string;
-  petugas_pinjam_id: number;
-  petugas_balik_id: number;
-  kondisi_awal_id: number;
-  kondisi_akhir_id: number;
-  status: string;
+export function useBukuHubQuery(barcode: string) {
+  return useQuery<Buku | null>({
+    queryKey: [...PINJAMAN_KEY, barcode],
+    queryFn: () => getBukuByBarcode(barcode),
+    enabled: barcode.length === 4,
+  });
+}
+export function useCreatePinjamanMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: RequestPinjaman) => postPinjaman(payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: PINJAMAN_KEY }),
+  });
 }
 
 // export interface DisplayPinjaman {
@@ -63,30 +78,18 @@ export interface Pinjamann {
 //   status: string;
 // }
 
-async function getPinjaman(): Promise<Pinjamann[]> {
-  const res = await api.get<Pinjamann[] | null>("/pinjaman");
+async function getPinjaman(): Promise<RequestPinjaman[]> {
+  const res = await api.get<RequestPinjaman[] | null>("/pinjaman");
   return res.data ?? [];
-}export interface Pinjaman {
-  id: number;
-  anggota_id: number;
-  buku_id: number;
-  tgl_pinjam: string;
-  tgl_balik: string;
-  petugas_pinjam_id: number;
-  petugas_balik_id: number;
-  kondisi_awal_id: number;
-  kondisi_akhir_id: number;
-  status: string;
 }
+
 export function usePinjamanQueryy() {
-  return useQuery<Pinjamann[]>({
+  return useQuery<RequestPinjaman[]>({
     queryKey: PINJAMAN_KEY,
     queryFn: getPinjaman,
   });
 }
-// async function postPinjaman(payload: RequestPinjaman): Promise<void> {
-//   await api.post("/pinjaman", payload);
-// }
+
 // async function updatePinjaman(
 //   id: number,
 //   payload: RequestPinjaman,
@@ -97,14 +100,6 @@ export function usePinjamanQueryy() {
 //   await api.delete(`/pinjaman/${id}`);
 // }
 
-
-// export function useCreatePinjamanMutation() {
-//   const queryClient = useQueryClient();
-//   return useMutation({
-//     mutationFn: (payload: RequestPinjaman) => postPinjaman(payload),
-//     onSuccess: () => queryClient.invalidateQueries({ queryKey: PINJAMAN_KEY }),
-//   });
-// }
 // export function useUpdatePinjamanMutation() {
 //   const queryClient = useQueryClient();
 //   return useMutation({

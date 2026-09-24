@@ -1,20 +1,23 @@
 "use client";
 
-import Badge from "@/components/Badge";
 import Button from "@/components/Button";
 // import ModalPinjaman from "@/components/ModalPinjaman";
 import Table from "@/components/Table";
 import TextField from "@/components/TextField";
-import { useGetNoAnggotaQuery } from "@/hooks/useAnggota";
-import { Buku, Pinjaman, usePinjamanQuery } from "@/hooks/usePinjaman";
+
+import {
+  Buku,
+  useBukuHubQuery,
+  useCreatePinjamanMutation,
+  usePinjamanQuery,
+} from "@/hooks/usePinjaman";
 import React, { useState } from "react";
 export default function Page() {
-  // const [dataPinjaman, setDataPinjaman] = useState<Pinjaman | null | undefined>(
-  //   undefined,
-  // );
   const [noAnggota, setNoAnggota] = useState<string>("");
   const { data, isLoading } = usePinjamanQuery(noAnggota);
-  const bukuBuku = data?.buku;
+  const [barcode, setBarcode] = useState<string>("");
+  const { data: dataBuku } = useBukuHubQuery(barcode);
+  const createPinjaman = useCreatePinjamanMutation();
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -22,35 +25,7 @@ export default function Page() {
           <h1 className="text-2xl font-medium ">Pinjaman</h1>
           <p className="text-muted">Kelola data pinjaman perpustaakan.</p>
         </div>
-        <div className="flex items-center ">
-          {/* <Button onClick={() => setDataPinjaman(null)} variant="primary">
-            + Tambah Pinjaman
-          </Button> */}
-          {/* {dataPinjaman !== undefined && (
-            <ModalPinjaman
-              isSubmiting={createMutation.isPending || updateMutation.isPending}
-              initial={dataPinjaman}
-              onClose={() => setDataPinjaman(undefined)}
-              onSubmit={(payload) => {
-                if (dataPinjaman) {
-                  updateMutation.mutate(
-                    {
-                      id: dataPinjaman.id,
-                      payload,
-                    },
-                    { onSuccess: () => setDataPinjaman(undefined) },
-                  );
-                } else {
-                  createMutation.mutate(
-                    payload,
-
-                    { onSuccess: () => setDataPinjaman(undefined) },
-                  );
-                }
-              }}
-            />
-          )} */}
-        </div>
+        <div className="flex items-center "></div>
       </div>
       {isLoading && (
         <div>
@@ -58,8 +33,8 @@ export default function Page() {
         </div>
       )}
       <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-5 w-1/8">
-          <div>
+        <div className="flex flex-col gap-5 w-screen">
+          <div className="flex items-end gap-4">
             <TextField
               label="No. Anggota"
               value={noAnggota}
@@ -67,22 +42,47 @@ export default function Page() {
                 setNoAnggota(value as string);
               }}
             />
-            <div className="mt-2">
-              {data?.nama === undefined && (
-                <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">
-                  Nama
-                </div>
-              )}
-              {data?.nama !== undefined && (
-                <div className="mt-2 border-2 border-gray-100 bg-white px-2 py-1 rounded-md">
-                  {data.nama}
-                </div>
-              )}
+            <div className="text-xl font-medium ">
+              {data?.nama !== undefined && <div>{data.nama}</div>}
             </div>
           </div>
+          <div className="flex items-end gap-20">
+            <div className="flex items-end gap-4">
+              {" "}
+              <TextField
+                label="Kode Buku"
+                value={barcode}
+                onChange={(value) => {
+                  setBarcode(value as string);
+                }}
+              />
+              <div className="text-xl font-medium ">
+                {dataBuku?.judul !== undefined && <div>{dataBuku.judul}</div>}
+              </div>
+            </div>
+
+            <Button
+              onClick={() =>
+                createPinjaman.mutate({
+                  anggota_id: data!.id,
+                  buku_id: dataBuku!.id,
+                  petugas_pinjam_id: null,
+                  petugas_balik_id: null,
+                  kondisi_awal_id: 1,
+                  kondisi_akhir_id: 1,
+                  status: "dipinjam",
+                })
+              }
+              type="submit"
+              variant="primary"
+            >
+              + Tambah Buku
+            </Button>
+          </div>
+
           <div className="w-screen">
             <Table<Buku>
-              data={bukuBuku ?? []}
+              data={data?.buku ?? []}
               keyFor={(p) => String(p.id)}
               column={[
                 { header: "No", content: (c) => c.id },
