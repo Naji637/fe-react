@@ -30,8 +30,8 @@ export default function Home() {
       id: index + 1,
       anggota: dataAnggota?.find((a) => a.id === p.anggota_id)?.nama || "",
       buku: dataBuku?.find((b) => b.id === p.buku_id)?.judul || "",
-      tgl_pinjam: p.tgl_pinjam || "",
-      jatuh_tempo: p.tgl_balik || "",
+      // tgl_pinjam: p.tgl_pinjam || "",
+      // jatuh_tempo: p.tgl_balik || "",
       status: p.status || "",
     }));
   }, [dataPinjaman, dataAnggota, dataBuku]);

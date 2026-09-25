@@ -85,7 +85,7 @@ export default function Page() {
               data={data?.buku ?? []}
               keyFor={(p) => String(p.id)}
               column={[
-                { header: "No", content: (c) => c.id },
+                { header: "No", content: (_,i) => i+1 },
                 { header: "Judul", content: (c) => c.judul },
                 { header: "Tanggal Pinjam", content: (c) => c.tgl_pinjam },
               ]}

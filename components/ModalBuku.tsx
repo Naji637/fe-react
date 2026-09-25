@@ -30,7 +30,6 @@ export default function ModalBuku({
   const [listKategoriId, setListKategoriId] = useState(
     initial ? String(initial.list_kategori_id) : "0",
   );
-  const [stock, setStock] = useState<number>(initial ? initial.stock : 0);
   const [penulis, setPenulis] = useState(initial ? initial.penulis : "");
   const { data: dataListKategori, isLoading } = useListKategoriQuery();
 
@@ -39,13 +38,11 @@ export default function ModalBuku({
     onSubmit({
       judul: judul,
       list_kategori_id: Number(listKategoriId),
-      stock: Number(stock),
       penulis: penulis,
     });
     console.log({
       judul: judul,
       list_kategori_id: Number(listKategoriId),
-      stock: stock,
       penulis: penulis,
     });
   }
@@ -72,11 +69,6 @@ export default function ModalBuku({
                   }}
                   data={convertToDataSelect(dataListKategori!)}
                   label="Kategori"
-                />
-                <TextField
-                  value={stock}
-                  onChange={(value) => setStock(value as number)}
-                  label="Stock"
                 />
                 <TextField
                   value={penulis}

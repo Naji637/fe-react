@@ -1,15 +1,30 @@
-import React, { use } from "react";
+import React, { use, useState } from "react";
 
-import { Buku } from "@/hooks/useBuku";
+import {
+  Buku,
+  useBukuQuery,
+  useCreateBarcode,
+  useGetBukuId,
+} from "@/hooks/useBuku";
 import { useListKategoriQuery } from "@/hooks/useListKategori";
+import Button from "./Button";
+import ModalBarcode from "./ModalBarcode";
+import { BukuHub } from "@/hooks/useBukuHub";
+import { useAnggotaQuery } from "@/hooks/useAnggota";
 
 interface BukuCardProps {
   buku: Buku;
+  updateBukuHub?: (bukuId:number) => void;
   updateBuku?: (buku: Buku) => void;
   hapusBuku?: (id: number) => void;
 }
 
-export function BukuCard({ buku, updateBuku, hapusBuku }: BukuCardProps) {
+export function BukuCard({
+  buku,
+  updateBuku,
+  hapusBuku,
+  updateBukuHub,
+}: BukuCardProps) {
   const { id, judul, list_kategori_id, stock, penulis } = buku;
   const { data: dataListKategori } = useListKategoriQuery();
   const kategori = dataListKategori?.find(
@@ -46,6 +61,10 @@ export function BukuCard({ buku, updateBuku, hapusBuku }: BukuCardProps) {
       </div>
 
       <div className="flex justify-end gap-2 pt-3 border-t border-gray-100 ">
+        <Button onClick={() => updateBukuHub?.(id)} variant="primary">
+          Create Barcode
+        </Button>
+
         {updateBuku && (
           <button
             onClick={() => updateBuku(buku)}

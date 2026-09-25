@@ -1,7 +1,7 @@
 import React, { type ReactNode } from "react";
 interface Column<T> {
   header: string;
-  content: (row: T) => ReactNode;
+  content: (row: T, index: number) => ReactNode;
 }
 interface TableProps<T> {
   column: Column<T>[];
@@ -23,11 +23,11 @@ export default function Table<T>({ column, data, keyFor }: TableProps<T>) {
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
+          {data.map((row, rowIndex) => (
             <tr key={keyFor(row)} className="border border-gray-200">
               {column.map((col) => (
                 <td key={col.header} className="p-3">
-                  {col.content(row)}
+                  {col.content(row, rowIndex)}
                 </td>
               ))}
             </tr>

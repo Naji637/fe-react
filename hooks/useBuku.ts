@@ -1,5 +1,6 @@
 import { api } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { BukuHub, CreateBukuHub } from "./useBukuHub";
 
 const BUKU_KEY = ["buku"];
 
@@ -14,11 +15,8 @@ export interface Buku {
 export interface RequestBuku {
   judul: string;
   list_kategori_id: number;
-  stock: number;
   penulis: string;
 }
-
-
 
 async function getBuku(): Promise<Buku[]> {
   const res = await api.get<Buku[] | null>("/buku");
@@ -33,6 +31,12 @@ async function updateBuku(id: number, payload: RequestBuku): Promise<void> {
 }
 async function deleteBuku(id: number): Promise<void> {
   await api.delete(`/buku/${id}`);
+}
+async function createBarcode(
+  payload: CreateBukuHub,
+  bukuId: number,
+): Promise<void> {
+  await api.put(`/buku/${bukuId}/register`, payload);
 }
 
 export function useBukuQuery() {
@@ -64,15 +68,26 @@ export function useDeleteBukuMutation() {
   });
 }
 
-export function useGetBukuId(id : number){
-    return useQuery<Buku | undefined>({
-      queryKey: [...BUKU_KEY, id],
-      queryFn: async () => {
-        const res = await api.get<Buku | null>(`/buku/${id}`);
-        return res.data ?? undefined;
-      },
-    });
+export function useGetBukuId(id: number) {
+  return useQuery<Buku | undefined>({
+    queryKey: [...BUKU_KEY, id],
+    queryFn: async () => {
+      const res = await api.get<Buku | null>(`/buku/${id}`);
+      return res.data ?? undefined;
+    },
+  });
 }
 
-
-
+export function useCreateBarcode() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      bukuId,
+      payload,
+    }: {
+      payload: CreateBukuHub;
+      bukuId: number;
+    }) => createBarcode(payload, bukuId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: BUKU_KEY }),
+  });
+}
