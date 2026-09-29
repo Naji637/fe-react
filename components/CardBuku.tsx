@@ -1,20 +1,12 @@
 import React, { use, useState } from "react";
 
-import {
-  Buku,
-  useBukuQuery,
-  useCreateBarcode,
-  useGetBukuId,
-} from "@/hooks/useBuku";
+import { Buku } from "@/hooks/useBuku";
 import { useListKategoriQuery } from "@/hooks/useListKategori";
 import Button from "./Button";
-import ModalBarcode from "./ModalBarcode";
-import { BukuHub } from "@/hooks/useBukuHub";
-import { useAnggotaQuery } from "@/hooks/useAnggota";
 
 interface BukuCardProps {
   buku: Buku;
-  updateBukuHub?: (bukuId:number) => void;
+  updateBukuHub?: (bukuId: number) => void;
   updateBuku?: (buku: Buku) => void;
   hapusBuku?: (id: number) => void;
 }
@@ -30,7 +22,6 @@ export function BukuCard({
   const kategori = dataListKategori?.find(
     (value) => value.id === list_kategori_id,
   );
-
   return (
     <div className="max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
       <div className="mb-3 flex items-start justify-between">

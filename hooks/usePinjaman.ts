@@ -7,6 +7,7 @@ export interface Buku {
   id: number;
   judul: string;
   tgl_pinjam: string;
+  tgl_balik: string;
 }
 
 export interface Pinjaman {
@@ -39,6 +40,17 @@ async function getBukuByBarcode(barcode: string): Promise<Buku | null> {
 async function postPinjaman(payload: RequestPinjaman): Promise<void> {
   await api.post("/pinjaman", payload);
 }
+async function updateTglBalik(id: number): Promise<RequestPinjaman | null> {
+  const res = await api.get<RequestPinjaman | null>(`/pinjaman/balik/${id}`);
+  return res.data ?? null;
+}
+export function useUpdateTglBalik(id: number) {
+  return useQuery<RequestPinjaman | null>({
+    queryKey: [...PINJAMAN_KEY, id],
+    queryFn: () => updateTglBalik(id),
+  });
+}
+
 export function usePinjamanQuery(noAnggota: string) {
   return useQuery<Pinjaman | null>({
     queryKey: [...PINJAMAN_KEY, noAnggota],
@@ -46,6 +58,7 @@ export function usePinjamanQuery(noAnggota: string) {
     enabled: noAnggota.length === 4,
   });
 }
+
 export function useBukuHubQuery(barcode: string) {
   return useQuery<Buku | null>({
     queryKey: [...PINJAMAN_KEY, barcode],

@@ -4,7 +4,6 @@ import Button from "@/components/Button";
 import { BukuCard } from "@/components/CardBuku";
 import ModalBarcode from "@/components/ModalBarcode";
 import ModalBuku from "@/components/ModalBuku";
-import { useAnggotaQuery, useGetNoAnggotaQuery } from "@/hooks/useAnggota";
 import {
   Buku,
   useBukuQuery,
@@ -27,9 +26,6 @@ export default function Page() {
     undefined,
   );
   const [bukuId, setBukuId] = useState<number | null>(null);
-  // const [noAnggota, setNoAnggota] = useState("");
-  // const dataAnggota = useGetNoAnggotaQuery(noAnggota);
-
   if (isLoading) {
     return (
       <div className="flex min-h-100 items-center justify-center text-sm font-medium text-slate-500">
