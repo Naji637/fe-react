@@ -48,6 +48,7 @@ export function useUpdateTglBalik(id: number) {
   return useQuery<RequestPinjaman | null>({
     queryKey: [...PINJAMAN_KEY, id],
     queryFn: () => updateTglBalik(id),
+
   });
 }
 
