@@ -26,7 +26,10 @@ export interface RequestPinjaman {
   kondisi_akhir_id: number;
   status: string;
 }
-
+export interface RequestUpdateTglBalik {
+  kondisi_akhir_id: number;
+  status: string;
+}
 async function getPinjamanByNoAnngota(
   noAnggota: string,
 ): Promise<Pinjaman | null> {
@@ -40,15 +43,23 @@ async function getBukuByBarcode(barcode: string): Promise<Buku | null> {
 async function postPinjaman(payload: RequestPinjaman): Promise<void> {
   await api.post("/pinjaman", payload);
 }
-async function updateTglBalik(id: number): Promise<RequestPinjaman | null> {
-  const res = await api.get<RequestPinjaman | null>(`/pinjaman/balik/${id}`);
-  return res.data ?? null;
+async function updateTglBalik(
+  id: number,
+  payload: RequestUpdateTglBalik,
+): Promise<void> {
+  await api.put(`/pinjaman/balik/${id}`, payload);
 }
-export function useUpdateTglBalik(id: number) {
-  return useQuery<RequestPinjaman | null>({
-    queryKey: [...PINJAMAN_KEY, id],
-    queryFn: () => updateTglBalik(id),
-
+export function useUpdateTglBalikMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      id,
+      payload,
+    }: {
+      id: number;
+      payload: RequestUpdateTglBalik;
+    }) => updateTglBalik(id, payload),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: PINJAMAN_KEY }),
   });
 }
 

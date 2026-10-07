@@ -7,22 +7,29 @@ import TextField from "@/components/TextField";
 
 import {
   Buku,
+  RequestUpdateTglBalik,
   useBukuHubQuery,
   useCreatePinjamanMutation,
   usePinjamanQuery,
-  useUpdateTglBalik,
+  useUpdateTglBalikMutation,
+  // useUpdateTglBalik,
 } from "@/hooks/usePinjaman";
 import { reverse } from "dns";
 import React, { useState } from "react";
 import { showDate } from "../helper/dateIndo";
+import ModalTglBalik from "@/components/ModalTglBalik";
 export default function Page() {
   const [noAnggota, setNoAnggota] = useState<string>("");
-  const [id, setId] = useState(0);
+  const [dataTglBalik, setDataTglBalik] = useState<
+    RequestUpdateTglBalik | null | undefined
+  >(undefined);
+  const [PinjamanId, setPinjamanId] = useState<number | null>(null);
   const { data, isLoading } = usePinjamanQuery(noAnggota);
   const [barcode, setBarcode] = useState<string>("");
   const { data: dataBuku } = useBukuHubQuery(barcode);
   const createPinjaman = useCreatePinjamanMutation();
-  const { data: updateTanggalBalik } = useUpdateTglBalik(id);
+  const updateTglBalik = useUpdateTglBalikMutation();
+  // const { data: updateTanggalBalik } = useUpdateTglBalik(id);
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -30,6 +37,7 @@ export default function Page() {
           <h1 className="text-2xl font-medium ">Pinjaman</h1>
           <p className="text-muted">Kelola data pinjaman perpustaakan.</p>
         </div>
+
         <div className="flex items-center "></div>
       </div>
       {isLoading && (
@@ -51,6 +59,26 @@ export default function Page() {
               {data?.nama !== undefined && <div>{data.nama}</div>}
             </div>
           </div>
+
+          {dataTglBalik !== undefined && (
+            <ModalTglBalik
+              initial={dataTglBalik}
+              isSubmiting={updateTglBalik.isPending}
+              onClose={() => setDataTglBalik(undefined)}
+              onSubmit={(payload) => {
+                {
+                  updateTglBalik.mutate(
+                    {
+                      id: Number(PinjamanId),
+                      payload,
+                    },
+                    { onSuccess: () => setDataTglBalik(undefined) },
+                  );
+                }
+              }}
+            />
+          )}
+
           <div className="flex items-end gap-20">
             <div className="flex items-end gap-4">
               {" "}
@@ -99,8 +127,11 @@ export default function Page() {
                 {
                   header: "Tanggal Balik",
                   content: (c, _) => (
-                    <Button onClick={() => setId(c.id)} variant="primary">
-                      Dikembalikan
+                    <Button
+                      onClick={() => setDataTglBalik(null)}
+                      variant="primary"
+                    >
+                      kembalikan
                     </Button>
                   ),
                 },
