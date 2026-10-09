@@ -19,3 +19,4 @@ export function useListKondisiQuery() {
     queryFn: getListKondisi,
   });
 }
+

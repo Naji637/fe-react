@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const PINJAMAN_KEY = ["pinjaman"];
 
+
 export interface Buku {
   id: number;
   judul: string;
@@ -49,6 +50,7 @@ async function updateTglBalik(
 ): Promise<void> {
   await api.put(`/pinjaman/balik/${id}`, payload);
 }
+
 export function useUpdateTglBalikMutation() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -85,6 +87,8 @@ export function useCreatePinjamanMutation() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: PINJAMAN_KEY }),
   });
 }
+
+
 
 // export interface DisplayPinjaman {
 //   id: number;

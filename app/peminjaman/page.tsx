@@ -1,9 +1,9 @@
 "use client";
 
 import Button from "@/components/Button";
-// import ModalPinjaman from "@/components/ModalPinjaman";
 import Table from "@/components/Table";
 import TextField from "@/components/TextField";
+import axios from "axios";
 
 import {
   Buku,
@@ -12,12 +12,13 @@ import {
   useCreatePinjamanMutation,
   usePinjamanQuery,
   useUpdateTglBalikMutation,
-  // useUpdateTglBalik,
 } from "@/hooks/usePinjaman";
 import { reverse } from "dns";
 import React, { useState } from "react";
 import { showDate } from "../helper/dateIndo";
 import ModalTglBalik from "@/components/ModalTglBalik";
+import { error } from "console";
+import ModalError from "@/components/ModalError";
 export default function Page() {
   const [noAnggota, setNoAnggota] = useState<string>("");
   const [dataTglBalik, setDataTglBalik] = useState<
@@ -29,7 +30,7 @@ export default function Page() {
   const { data: dataBuku } = useBukuHubQuery(barcode);
   const createPinjaman = useCreatePinjamanMutation();
   const updateTglBalik = useUpdateTglBalikMutation();
-  // const { data: updateTanggalBalik } = useUpdateTglBalik(id);
+  const [messageError, setMessageError] = useState<string | null>(null);
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -81,7 +82,6 @@ export default function Page() {
 
           <div className="flex items-end gap-20">
             <div className="flex items-end gap-4">
-              {" "}
               <TextField
                 label="Kode Buku"
                 value={barcode}
@@ -96,15 +96,24 @@ export default function Page() {
 
             <Button
               onClick={() =>
-                createPinjaman.mutate({
-                  anggota_id: data!.id,
-                  buku_id: dataBuku!.id,
-                  petugas_pinjam_id: null,
-                  petugas_balik_id: null,
-                  kondisi_awal_id: 1,
-                  kondisi_akhir_id: 1,
-                  status: "dipinjam",
-                })
+                createPinjaman.mutate(
+                  {
+                    anggota_id: data!.id,
+                    buku_id: dataBuku!.id,
+                    petugas_pinjam_id: null,
+                    petugas_balik_id: null,
+                    kondisi_awal_id: 1,
+                    kondisi_akhir_id: 1,
+                    status: "dipinjam",
+                  },
+                  {
+                    onError: (error) => {
+                      if (axios.isAxiosError(error)) {
+                        setMessageError(error.response?.data.message);
+                      }
+                    },
+                  },
+                )
               }
               type="submit"
               variant="primary"
@@ -112,7 +121,12 @@ export default function Page() {
               + Tambah Buku
             </Button>
           </div>
-
+          {messageError !== null && (
+            <ModalError
+              onClose={() => setMessageError(null)}
+              message={messageError}
+            />
+          )}
           <div className="w-screen">
             <Table<Buku>
               data={data?.buku ?? []}
@@ -128,7 +142,10 @@ export default function Page() {
                   header: "Tanggal Balik",
                   content: (c, _) => (
                     <Button
-                      onClick={() => setDataTglBalik(null)}
+                      onClick={() => {
+                        setPinjamanId(c.id);
+                        setDataTglBalik(null);
+                      }}
                       variant="primary"
                     >
                       kembalikan
