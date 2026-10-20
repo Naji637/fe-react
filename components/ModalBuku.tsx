@@ -12,6 +12,8 @@ interface ModalBukuProps {
   onSubmit: (payload: RequestBuku) => void;
 }
 
+
+
 function convertToDataSelect(data: ListKategori[]): DataProps[] {
   const dataSelectBox: DataProps[] = [];
   data.map((item) => {
@@ -19,6 +21,7 @@ function convertToDataSelect(data: ListKategori[]): DataProps[] {
   });
   return dataSelectBox;
 }
+
 
 export default function ModalBuku({
   isSubmiting,

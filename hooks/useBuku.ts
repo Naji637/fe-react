@@ -38,6 +38,10 @@ async function createBarcode(
 ): Promise<void> {
   await api.put(`/buku/${bukuId}/register`, payload);
 }
+async function getKondisiByBarcode(barcode: string) :Promise<BukuHub> {
+  const res = await api.get(`/buku/kondisi/search?q=${barcode}`);
+  return res.data;
+}
 
 export function useBukuQuery() {
   return useQuery<Buku[]>({
@@ -89,5 +93,12 @@ export function useCreateBarcode() {
       bukuId: number;
     }) => createBarcode(payload, bukuId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: BUKU_KEY }),
+  });
+}
+export function useGetKondisiByBarcode(barcode: string) {
+  return useQuery<BukuHub>({
+    queryKey: [...BUKU_KEY, barcode],
+    queryFn: () => getKondisiByBarcode(barcode),
+    enabled: barcode.length === 4,
   });
 }

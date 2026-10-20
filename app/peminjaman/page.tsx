@@ -13,12 +13,13 @@ import {
   usePinjamanQuery,
   useUpdateTglBalikMutation,
 } from "@/hooks/usePinjaman";
-import { reverse } from "dns";
+
 import React, { useState } from "react";
 import { showDate } from "../helper/dateIndo";
 import ModalTglBalik from "@/components/ModalTglBalik";
-import { error } from "console";
+
 import ModalError from "@/components/ModalError";
+import { useGetKondisiByBarcode } from "@/hooks/useBuku";
 export default function Page() {
   const [noAnggota, setNoAnggota] = useState<string>("");
   const [dataTglBalik, setDataTglBalik] = useState<
@@ -31,6 +32,10 @@ export default function Page() {
   const createPinjaman = useCreatePinjamanMutation();
   const updateTglBalik = useUpdateTglBalikMutation();
   const [messageError, setMessageError] = useState<string | null>(null);
+  const { data: dataKondisiByBarcode,isLoading: isLoadingKondisi } = useGetKondisiByBarcode(barcode);
+
+  console.log("pppppppppppppppp",dataKondisiByBarcode);
+  
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -41,7 +46,7 @@ export default function Page() {
 
         <div className="flex items-center "></div>
       </div>
-      {isLoading && (
+      {isLoading && isLoadingKondisi && (
         <div>
           <h1>sedang menunggu data</h1>
         </div>
@@ -102,7 +107,7 @@ export default function Page() {
                     buku_id: dataBuku!.id,
                     petugas_pinjam_id: null,
                     petugas_balik_id: null,
-                    kondisi_awal_id: 1,
+                    kondisi_awal_id: dataKondisiByBarcode!.list_kondisi_id,
                     kondisi_akhir_id: 1,
                     status: "dipinjam",
                   },

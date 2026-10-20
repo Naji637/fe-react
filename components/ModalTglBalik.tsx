@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import { RequestUpdateTglBalik } from "@/hooks/usePinjaman";
 import SelectBox, { DataProps } from "./SelectBox";
@@ -27,11 +27,18 @@ export default function ModalTglBalik({
   isSubmiting,
   onSubmit,
 }: ModalProps) {
-  const [kondisiAkhir, setKondisiAkhir] = useState(
-    initial ? String(initial.kondisi_akhir_id) : "1",
+  const [status, setStatus] = useState(
+    initial ? initial.status : "dikembalikan",
   );
-  const [status, setStatus] = useState(initial ? initial.status : "");
   const { data, isLoading } = useListKondisiQuery();
+  const [kondisiAkhir, setKondisiAkhir] = useState("");
+  useEffect(() => {
+    (function setInitialKondisiAkhir  () {
+      setKondisiAkhir(() => String(data?.[0].id));
+    })()
+    // setInitialKondisiAkhir();
+  }, [data]);
+
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
@@ -56,7 +63,7 @@ export default function ModalTglBalik({
                   setKondisiAkhir(value);
                 }}
                 data={convertToDataSelect(data!)}
-                label="Klasifikasi Anggota"
+                label="Kondisi Buku"
               />
               <SelectBox
                 value={status}
