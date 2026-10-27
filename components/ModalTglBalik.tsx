@@ -42,7 +42,7 @@ export default function ModalTglBalik({
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
-      kondisi_akhir_id: Number(kondisiAkhir),
+      kondisi_akhir_id: kondisiAkhir,
       status: status,
     });
   }

@@ -5,13 +5,13 @@ import CardCount from "@/components/CardCountDashboard";
 import { checkStatus } from "./helper/checkStatus";
 import Table from "@/components/Table";
 
-import { useBukuQuery } from "@/hooks/useBuku";
-import { usePinjamanQueryy } from "@/hooks/usePinjaman";
+import { useBooksQuery } from "@/hooks/useBook";
+import { usePinjamanDashboard, usePinjamanQuery } from "@/hooks/usePinjaman";
 import { useAnggotaQuery } from "@/hooks/useAnggota";
 import { useMemo } from "react";
 
 export interface TableData {
-  id: number;
+  id: string;
   anggota: string;
   buku: string;
   tgl_pinjam: string;
@@ -21,20 +21,20 @@ export interface TableData {
 
 export default function Home() {
   const { data: dataAnggota } = useAnggotaQuery();
-  const { data: dataBuku } = useBukuQuery();
-  const { data: dataPinjaman } = usePinjamanQueryy();
+  const { data: bookData } = useBooksQuery();
+  const { data: dataPinjaman } = usePinjamanDashboard();
   const tableData = useMemo<TableData[]>(() => {
     if (!dataPinjaman) return [];
 
     return dataPinjaman.map((p, index) => ({
       id: index + 1,
       anggota: dataAnggota?.find((a) => a.id === p.anggota_id)?.nama || "",
-      buku: dataBuku?.find((b) => b.id === p.buku_id)?.judul || "",
+      buku: bookData?.find((b) => b.id === p.buku_id)?.title || "",
       // tgl_pinjam: p.tgl_pinjam || "",
       // jatuh_tempo: p.tgl_balik || "",
       status: p.status || "",
     }));
-  }, [dataPinjaman, dataAnggota, dataBuku]);
+  }, [dataPinjaman, dataAnggota, bookData]);
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col">
@@ -45,7 +45,7 @@ export default function Home() {
       <div className="flex gap-5">
         <CardCount title="Total Anggota" sum={dataAnggota?.length || 0} />
 
-        <CardCount title="Total Buku" sum={dataBuku?.length || 0} />
+        <CardCount title="Total Buku" sum={bookData?.length || 0} />
 
         <CardCount
           title="Buku Sedang Dipinjam"

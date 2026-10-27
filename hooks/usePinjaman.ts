@@ -3,8 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const PINJAMAN_KEY = ["pinjaman"];
 
-export interface Buku {
-  id: number;
+export interface Book {
+  id: string;
   judul: string;
   tgl_pinjam: string;
   tgl_balik: string;
@@ -15,19 +15,19 @@ export interface Pinjaman {
   no_anggota: string;
   nama: string;
   boleh_pinjam: boolean;
-  buku: Buku[];
+  book: Book[];
 }
 export interface RequestPinjaman {
-  anggota_id: number;
-  buku_id: number;
-  petugas_pinjam_id: number | null;
-  petugas_balik_id: number | null;
-  kondisi_awal_id: number;
-  kondisi_akhir_id: number;
+  anggota_id: string;
+  buku_id: string;
+  petugas_pinjam_id: string | null;
+  petugas_balik_id: string | null;
+  kondisi_awal_id: string;
+  kondisi_akhir_id: string;
   status: string;
 }
 export interface RequestUpdateTglBalik {
-  kondisi_akhir_id: number;
+  kondisi_akhir_id: string;
   status: string;
 }
 async function getPinjamanByNoAnngota(
@@ -36,15 +36,15 @@ async function getPinjamanByNoAnngota(
   const res = await api.get<Pinjaman | null>(`/pinjaman/${noAnggota}`);
   return res.data ?? null;
 }
-async function getBukuByBarcode(barcode: string): Promise<Buku | null> {
-  const res = await api.get<Buku | null>(`/buku/search?q=${barcode}`);
+async function getBukuByBarcode(barcode: string): Promise<Book | null> {
+  const res = await api.get<Book | null>(`/buku/search?q=${barcode}`);
   return res.data ?? null;
 }
 async function postPinjaman(payload: RequestPinjaman): Promise<void> {
   await api.post("/pinjaman", payload);
 }
 async function updateTglBalik(
-  id: number,
+  id: string,
   payload: RequestUpdateTglBalik,
 ): Promise<void> {
   await api.put(`/pinjaman/balik/${id}`, payload);
@@ -57,7 +57,7 @@ export function useUpdateTglBalikMutation() {
       id,
       payload,
     }: {
-      id: number;
+      id: string;
       payload: RequestUpdateTglBalik;
     }) => updateTglBalik(id, payload),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: PINJAMAN_KEY }),
@@ -73,7 +73,7 @@ export function usePinjamanQuery(noAnggota: string) {
 }
 
 export function useBukuHubQuery(barcode: string) {
-  return useQuery<Buku | null>({
+  return useQuery<Book | null>({
     queryKey: [...PINJAMAN_KEY, barcode],
     queryFn: () => getBukuByBarcode(barcode),
     enabled: barcode.length === 4,
@@ -109,7 +109,7 @@ async function getPinjaman(): Promise<RequestPinjaman[]> {
   return res.data ?? [];
 }
 
-export function usePinjamanQueryy() {
+export function usePinjamanDashboard() {
   return useQuery<RequestPinjaman[]>({
     queryKey: PINJAMAN_KEY,
     queryFn: getPinjaman,

@@ -19,7 +19,7 @@ import { showDate } from "../helper/dateIndo";
 import ModalTglBalik from "@/components/ModalTglBalik";
 
 import ModalError from "@/components/ModalError";
-import { useGetKondisiByBarcode } from "@/hooks/useBuku";
+import { useGetKondisiByBarcode } from "@/hooks/useBook";
 export default function Page() {
   const [noAnggota, setNoAnggota] = useState<string>("");
   const [dataTglBalik, setDataTglBalik] = useState<
@@ -32,10 +32,9 @@ export default function Page() {
   const createPinjaman = useCreatePinjamanMutation();
   const updateTglBalik = useUpdateTglBalikMutation();
   const [messageError, setMessageError] = useState<string | null>(null);
-  const { data: dataKondisiByBarcode,isLoading: isLoadingKondisi } = useGetKondisiByBarcode(barcode);
+  const { data: dataKondisiByBarcode, isLoading: isLoadingKondisi } =
+    useGetKondisiByBarcode(barcode);
 
-  console.log("pppppppppppppppp",dataKondisiByBarcode);
-  
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">

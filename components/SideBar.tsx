@@ -23,8 +23,8 @@ const navItems = [
     icon: IconAnggota,
   },
   {
-    href: "/buku",
-    label: "Buku",
+    href: "/books",
+    label: "Books",
     icon: IconBuku,
   },
   {

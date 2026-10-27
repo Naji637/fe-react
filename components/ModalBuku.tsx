@@ -1,4 +1,4 @@
-import { Buku, RequestBuku } from "@/hooks/useBuku";
+import { Books, BookRequest } from "@/hooks/useBook";
 import { ListKategori, useListKategoriQuery } from "@/hooks/useListKategori";
 import React, { useState } from "react";
 import TextField from "./TextField";
@@ -6,13 +6,11 @@ import Button from "./Button";
 import SelectBox, { DataProps } from "./SelectBox";
 
 interface ModalBukuProps {
-  initial: Buku | null | undefined;
+  initial: Books | null | undefined;
   onClose: () => void;
   isSubmiting: boolean;
-  onSubmit: (payload: RequestBuku) => void;
+  onSubmit: (payload: BookRequest) => void;
 }
-
-
 
 function convertToDataSelect(data: ListKategori[]): DataProps[] {
   const dataSelectBox: DataProps[] = [];
@@ -22,31 +20,25 @@ function convertToDataSelect(data: ListKategori[]): DataProps[] {
   return dataSelectBox;
 }
 
-
 export default function ModalBuku({
   isSubmiting,
   initial,
   onClose,
   onSubmit,
 }: ModalBukuProps) {
-  const [judul, setJudul] = useState(initial ? initial.judul : "");
+  const [title, setTitle] = useState(initial ? initial.title : "");
   const [listKategoriId, setListKategoriId] = useState(
-    initial ? String(initial.list_kategori_id) : "0",
+    initial ? String(initial.category_id) : "0",
   );
-  const [penulis, setPenulis] = useState(initial ? initial.penulis : "");
+  const [author, setAuthor] = useState(initial ? initial.author : "");
   const { data: dataListKategori, isLoading } = useListKategoriQuery();
 
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
-      judul: judul,
-      list_kategori_id: Number(listKategoriId),
-      penulis: penulis,
-    });
-    console.log({
-      judul: judul,
-      list_kategori_id: Number(listKategoriId),
-      penulis: penulis,
+      title: title,
+      category_id: listKategoriId,
+      author: author,
     });
   }
   if (isLoading) {
@@ -61,9 +53,9 @@ export default function ModalBuku({
             <div className="gap-7 px-8 py-5">
               <form className="flex flex-col gap-7 " onSubmit={handleSubmit}>
                 <TextField
-                  value={judul}
-                  onChange={(value) => setJudul(value as string)}
-                  label="Judul"
+                  value={title}
+                  onChange={(value) => setTitle(value as string)}
+                  label="Title"
                 />
                 <SelectBox
                   value={listKategoriId}
@@ -71,12 +63,12 @@ export default function ModalBuku({
                     setListKategoriId(value);
                   }}
                   data={convertToDataSelect(dataListKategori!)}
-                  label="Kategori"
+                  label="Category"
                 />
                 <TextField
-                  value={penulis}
-                  onChange={(value) => setPenulis(value as string)}
-                  label="Penulis"
+                  value={author}
+                  onChange={(value) => setAuthor(value as string)}
+                  label="Author"
                 />
                 <div className="flex justify-end">
                   <Button
@@ -84,7 +76,7 @@ export default function ModalBuku({
                     disabled={isSubmiting}
                     variant="primary"
                   >
-                    {isSubmiting ? "Menyimpan..." : "Simpan"}
+                    {isSubmiting ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>

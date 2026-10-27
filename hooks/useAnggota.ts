@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const ANGGOTA_KEY = ["anggota"];
 
 export interface Anggota {
-  id: number;
+  id: string;
   no_anggota: string;
   nama: string;
   alumni: boolean;
@@ -31,7 +31,7 @@ async function updateAnggota(
 ): Promise<void> {
   await api.put(`/anggota/${id}`, payload);
 }
-async function deleteAnggota(id: number): Promise<void> {
+async function deleteAnggota(id: string): Promise<void> {
   await api.delete(`/anggota/${id}`);
 }
 
@@ -60,12 +60,12 @@ export function useUpdateAnggotaMutation() {
 export function useDeleteAnggotaMutation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: number) => deleteAnggota(id),
+    mutationFn: (id: string) => deleteAnggota(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ANGGOTA_KEY }),
   });
 }
 
-export function useGetAnggotaId(id: number) {
+export function useGetAnggotaId(id: string) {
   return useQuery<Anggota | undefined>({
     queryKey: [...ANGGOTA_KEY, id],
     queryFn: async () => {
