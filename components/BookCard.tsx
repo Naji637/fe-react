@@ -1,7 +1,7 @@
 import React, { use, useState } from "react";
 
 import { Books, useBooksQuery } from "@/hooks/useBook";
-import { useListKategoriQuery } from "@/hooks/useListKategori";
+import { useCategoriesQuery } from "@/hooks/useCategory";
 import Button from "./Button";
 
 interface BookCardProps {
@@ -17,7 +17,6 @@ export default function BookCard({
   updateBook,
   updateBookHub,
 }: BookCardProps) {
-
   return (
     <div className="max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
       <div className="mb-3 flex items-start justify-between">

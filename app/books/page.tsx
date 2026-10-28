@@ -12,7 +12,7 @@ import {
   useDeleteBookMutation,
   useUpdateBookMutation,
 } from "@/hooks/useBook";
-import { BukuHub } from "@/hooks/useBukuHub";
+import { BukuHub } from "@/hooks/useBookHub";
 import React, { useState } from "react";
 
 export default function Page() {
@@ -25,7 +25,7 @@ export default function Page() {
   const [bookHubData, setBookHubData] = useState<BukuHub | null | undefined>(
     undefined,
   );
-  const [booksId, setBooksId] = useState<string | null>(null);
+  // const [booksId, setBooksId] = useState<string | null>(null);
   if (isLoading) {
     return (
       <div className="flex min-h-100 items-center justify-center text-sm font-medium text-slate-500">
@@ -50,10 +50,10 @@ export default function Page() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {data?.map((book) => (
           <BookCard
-            key={booksId}
+            key={book.id}
             book={book}
             updateBookHub={(booksId) => {
-              (setBooksId(booksId), setBookHubData(null));
+              setBookHubData(null);
             }}
             updateBook={(item) => setBookData(item)}
             deleteBook={(id) => deleteMutation.mutate(id)}

@@ -1,51 +1,62 @@
-import { BukuHub, CreateBukuHub } from "@/hooks/useBukuHub";
-import { useState } from "react";
+import { BookHub, CreateBookHub } from "@/hooks/useBookHub";
+import { useEffect, useState } from "react";
 import TextField from "./TextField";
 import SelectBox, { DataProps } from "./SelectBox";
-import { ListKondisi, useListKondisiQuery } from "@/hooks/useListKondisi";
-import { init } from "next/dist/compiled/webpack/webpack";
+import { Conditions, useConditionsQuery } from "@/hooks/useCondition";
+
 import Button from "./Button";
-import { useGetNoAnggotaQuery } from "@/hooks/useAnggota";
+import { useGetNoAnggotaQuery } from "@/hooks/useMember";
+import { Shelves, useShelvesQuery } from "@/hooks/useShelf";
 
 interface ModalBarcodeProps {
-  initial: BukuHub | null | undefined;
   onClose: () => void;
   isSubmiting: boolean;
-  onSubmit: (payload: CreateBukuHub) => void;
+  onSubmit: (payload: CreateBookHub) => void;
 }
 
-function convertToDataSelect(data: ListKondisi[]): DataProps[] {
+function convertToDataSelect(data: Conditions[]): DataProps[] {
   const dataSelectBox: DataProps[] = [];
   data.map((item) => {
-    dataSelectBox.push({ label: item.kondisi, value: String(item.id) });
+    dataSelectBox.push({ label: item.condition, value: item.id });
   });
   return dataSelectBox;
+}
+function convertToDataSelectForShelves(data: Shelves[]): DataProps[] {
+  const dataSelectBoxForShelves: DataProps[] = [];
+  data.map((item) => {
+    dataSelectBoxForShelves.push({ label: item.shelf_number, value: item.id });
+  });
+  return dataSelectBoxForShelves;
 }
 
 export default function ModalBarcode({
   isSubmiting,
-  initial,
   onClose,
   onSubmit,
 }: ModalBarcodeProps) {
-  const [listKondisiId, setListKondisiId] = useState(
-    initial ? String(initial.list_kondisi_id) : "1",
-  );
-  const [rakId, setRakId] = useState(initial ? initial.rak_id : 1);
-  const [noAnggota, setNoAnggota] = useState(initial ? initial.no_anggota : "");
-  const { data: dataListKondisi, isLoading } = useListKondisiQuery();
+  const { data: dataConditions, isLoading } = useConditionsQuery();
+  const { data: dataShelves } = useShelvesQuery();
+  const [conditionsId, setConditionsId] = useState("");
+  const [shelfId, setShelfId] = useState("");
+  const [membershipNumber, setMembershipNumber] = useState("");
+
+  useEffect(() => {
+    (function setInitialBookHub() {
+      setConditionsId(() => String(dataConditions?.[0].id));
+      setShelfId(() => String(dataShelves?.[0].id));
+    })();
+  }, [dataConditions, dataShelves]);
 
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
-    let tampung = null;
-    if (noAnggota !== "") {
-      tampung = noAnggota;
-
+    let temp = null;
+    if (membershipNumber !== "") {
+      temp = membershipNumber;
     }
     onSubmit({
-      list_kondisi_id: Number(listKondisiId),
-      rak_id: Number(rakId),
-      no_anggota: tampung,
+      condition_id: conditionsId,
+      shelf_id: shelfId,
+      membership_number: temp,
     });
   }
 
@@ -61,22 +72,26 @@ export default function ModalBarcode({
             <div className="gap-7 px-8 py-5">
               <form className="flex flex-col gap-7 " onSubmit={handleSubmit}>
                 <SelectBox
-                  value={listKondisiId}
+                  value={conditionsId}
                   onChange={(value) => {
-                    setListKondisiId(value);
+                    setConditionsId(value);
                   }}
-                  data={convertToDataSelect(dataListKondisi!)}
-                  label="Kondisi Buku"
+                  data={convertToDataSelect(dataConditions!)}
+                  label="Book's Condition"
                 />
-                <TextField
-                  value={rakId}
-                  onChange={(value) => setRakId(value as number)}
-                  label="Rak Buku"
+                <SelectBox
+                  value={shelfId}
+                  onChange={(value) => {
+                    setShelfId(value);
+                  }}
+                  data={convertToDataSelectForShelves(dataShelves!)}
+                  label="Shelf Number"
                 />
+
                 <TextField
-                  value={noAnggota}
-                  onChange={(value) => setNoAnggota(value as string)}
-                  label="No. Anggota"
+                  value={membershipNumber}
+                  onChange={(value) => setMembershipNumber(value as string)}
+                  label="Membership Number"
                 />
 
                 <div className="flex justify-end">
@@ -85,7 +100,7 @@ export default function ModalBarcode({
                     disabled={isSubmiting}
                     variant="primary"
                   >
-                    {isSubmiting ? "Menyimpan..." : "Simpan"}
+                    {isSubmiting ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>

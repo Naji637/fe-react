@@ -1,13 +1,13 @@
 "use client";
 
-import { Anggota, RequestAnggota } from "@/hooks/useAnggota";
+import { Anggota, RequestAnggota } from "@/hooks/useMember";
 import React, { ReactNode, useState } from "react";
 import TextField from "./TextField";
 import Button from "./Button";
 import {
   KlasifikasiAnggota,
   useGetKlasifikasiAnggotaQuery,
-} from "@/hooks/useKlasifikasiAnggota";
+} from "@/hooks/useMemberClassification";
 import SelectBox, { DataProps } from "./SelectBox";
 
 interface ModalProps {

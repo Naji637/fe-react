@@ -9,7 +9,7 @@ import {
   useCreateAnggotaMutation,
   useDeleteAnggotaMutation,
   useUpdateAnggotaMutation,
-} from "@/hooks/useAnggota";
+} from "@/hooks/useMember";
 
 import { checkStatusAnggota } from "../helper/checkStatus";
 import Modal from "@/components/Modal";
@@ -32,7 +32,6 @@ export default function Page() {
           <p className="text-muted">Kelola data anggota perpustaakan.</p>
         </div>
         <div className="flex items-center ">
-         
           <Button onClick={() => setDataAnggota(null)} variant="primary">
             + Tambah Anggota
           </Button>

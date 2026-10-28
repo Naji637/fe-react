@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
-import { RequestUpdateTglBalik } from "@/hooks/usePinjaman";
+import { RequestUpdateTglBalik } from "@/hooks/useBorrowing";
 import SelectBox, { DataProps } from "./SelectBox";
-import { ListKondisi, useListKondisiQuery } from "@/hooks/useListKondisi";
+import { ListKondisi, useListKondisiQuery } from "@/hooks/useCondition";
 
 interface ModalProps {
   initial: RequestUpdateTglBalik | null;
@@ -14,7 +14,7 @@ interface ModalProps {
 }
 
 function convertToDataSelect(data: ListKondisi[]): DataProps[] {
-  let dataSelectBox: DataProps[] = [];
+  const dataSelectBox: DataProps[] = [];
   data.map((item) => {
     dataSelectBox.push({ label: item.kondisi, value: String(item.id) });
   });
@@ -33,9 +33,9 @@ export default function ModalTglBalik({
   const { data, isLoading } = useListKondisiQuery();
   const [kondisiAkhir, setKondisiAkhir] = useState("");
   useEffect(() => {
-    (function setInitialKondisiAkhir  () {
+    (function setInitialKondisiAkhir() {
       setKondisiAkhir(() => String(data?.[0].id));
-    })()
+    })();
     // setInitialKondisiAkhir();
   }, [data]);
 

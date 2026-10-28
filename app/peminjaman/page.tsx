@@ -12,7 +12,7 @@ import {
   useCreatePinjamanMutation,
   usePinjamanQuery,
   useUpdateTglBalikMutation,
-} from "@/hooks/usePinjaman";
+} from "@/hooks/useBorrowing";
 
 import React, { useState } from "react";
 import { showDate } from "../helper/dateIndo";

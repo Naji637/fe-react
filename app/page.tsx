@@ -6,8 +6,8 @@ import { checkStatus } from "./helper/checkStatus";
 import Table from "@/components/Table";
 
 import { useBooksQuery } from "@/hooks/useBook";
-import { usePinjamanDashboard, usePinjamanQuery } from "@/hooks/usePinjaman";
-import { useAnggotaQuery } from "@/hooks/useAnggota";
+import { usePinjamanDashboard, usePinjamanQuery } from "@/hooks/useBorrowing";
+import { useAnggotaQuery } from "@/hooks/useMember";
 import { useMemo } from "react";
 
 export interface TableData {

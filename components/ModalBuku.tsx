@@ -1,6 +1,6 @@
 import { Books, BookRequest } from "@/hooks/useBook";
-import { ListKategori, useListKategoriQuery } from "@/hooks/useListKategori";
-import React, { useState } from "react";
+import { Categories, useCategoriesQuery } from "@/hooks/useCategory";
+import React, { useEffect, useState } from "react";
 import TextField from "./TextField";
 import Button from "./Button";
 import SelectBox, { DataProps } from "./SelectBox";
@@ -12,10 +12,10 @@ interface ModalBukuProps {
   onSubmit: (payload: BookRequest) => void;
 }
 
-function convertToDataSelect(data: ListKategori[]): DataProps[] {
+function convertToDataSelect(data: Categories[]): DataProps[] {
   const dataSelectBox: DataProps[] = [];
   data.map((item) => {
-    dataSelectBox.push({ label: item.kategori, value: String(item.id) });
+    dataSelectBox.push({ label: item.category, value: item.id });
   });
   return dataSelectBox;
 }
@@ -27,17 +27,21 @@ export default function ModalBuku({
   onSubmit,
 }: ModalBukuProps) {
   const [title, setTitle] = useState(initial ? initial.title : "");
-  const [listKategoriId, setListKategoriId] = useState(
-    initial ? String(initial.category_id) : "0",
-  );
+  const { data: dataCategories, isLoading } = useCategoriesQuery();
+
+  const [CategoriesId, setCategoriesId] = useState("");
+  useEffect(() => {
+    (function setInitialCategoriesId() {
+      setCategoriesId(() => String(dataCategories?.[0].id));
+    })();
+  }, [dataCategories]);
   const [author, setAuthor] = useState(initial ? initial.author : "");
-  const { data: dataListKategori, isLoading } = useListKategoriQuery();
 
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
       title: title,
-      category_id: listKategoriId,
+      category_id: CategoriesId,
       author: author,
     });
   }
@@ -58,11 +62,11 @@ export default function ModalBuku({
                   label="Title"
                 />
                 <SelectBox
-                  value={listKategoriId}
+                  value={CategoriesId}
                   onChange={(value) => {
-                    setListKategoriId(value);
+                    setCategoriesId(value);
                   }}
-                  data={convertToDataSelect(dataListKategori!)}
+                  data={convertToDataSelect(dataCategories!)}
                   label="Category"
                 />
                 <TextField
