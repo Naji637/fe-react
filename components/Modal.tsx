@@ -1,26 +1,26 @@
 "use client";
 
-import { Anggota, RequestAnggota } from "@/hooks/useMember";
+import { Members, MemberRequest } from "@/hooks/useMember";
 import React, { ReactNode, useState } from "react";
 import TextField from "./TextField";
 import Button from "./Button";
 import {
-  KlasifikasiAnggota,
+  MemberClassifications,
   useGetKlasifikasiAnggotaQuery,
 } from "@/hooks/useMemberClassification";
 import SelectBox, { DataProps } from "./SelectBox";
 
 interface ModalProps {
-  initial: Anggota | null;
+  initial: Members | null;
   onClose: () => void;
   isSubmiting: boolean;
-  onSubmit: (payload: RequestAnggota) => void;
+  onSubmit: (payload: MemberRequest) => void;
 }
 
-function convertToDataSelect(data: KlasifikasiAnggota[]): DataProps[] {
+function convertToDataSelect(data: MemberClassifications[]): DataProps[] {
   let dataSelectBox: DataProps[] = [];
   data.map((item) => {
-    dataSelectBox.push({ label: item.klasifikasi, value: String(item.id) });
+    dataSelectBox.push({ label: item.classification, value: String(item.id) });
   });
   return dataSelectBox;
 }
@@ -31,19 +31,19 @@ export default function Modal({
   isSubmiting,
   onSubmit,
 }: ModalProps) {
-  const [nama, setNama] = useState(initial ? initial.nama : "");
+  const [nama, setNama] = useState(initial ? initial.name : "");
   const [alumni, setAlumni] = useState(initial ? initial.alumni : false);
   const [klasifikasiAnggotaId, setKlasifikasiAnggotaId] = useState(
-    initial ? String(initial.klasifikasi_anggota_id) : "1",
+    initial ? String(initial.member_classification_id) : "1",
   );
   // const [klasifikasiAnggotaId,setKlasifikasiAnggotaId]=useState("2")
   const { data, isLoading } = useGetKlasifikasiAnggotaQuery();
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
-      nama: nama,
+      name: nama,
       alumni: alumni,
-      klasifikasi_anggota_id: Number(klasifikasiAnggotaId),
+      member_classification_id: klasifikasiAnggotaId,
     });
     //  console.log(typeof(klasifikasiAnggotaId))
   }
@@ -75,7 +75,7 @@ export default function Modal({
                   setKlasifikasiAnggotaId(value);
                 }}
                 data={convertToDataSelect(data!)}
-                label="Klasifikasi Anggota"
+                label="Klasifikasi Members"
               />
               <div className="flex justify-end">
                 <Button type="submit" disabled={isSubmiting} variant="primary">

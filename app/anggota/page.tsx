@@ -4,11 +4,11 @@ import Badge from "@/components/Badge";
 import Table from "@/components/Table";
 import React, { useState } from "react";
 import {
-  Anggota,
-  useAnggotaQuery,
-  useCreateAnggotaMutation,
-  useDeleteAnggotaMutation,
-  useUpdateAnggotaMutation,
+  Members,
+  useMembersQuery,
+  useCreateMemberMutation,
+  useDeleteMemberMutation,
+  useUpdateMemberMutation,
 } from "@/hooks/useMember";
 
 import { checkStatusAnggota } from "../helper/checkStatus";
@@ -17,23 +17,23 @@ import Button from "@/components/Button";
 // import { checkStatusAnggota } from "../helper/checkStatus";
 
 export default function Page() {
-  const [dataAnggota, setDataAnggota] = useState<Anggota | null | undefined>(
+  const [dataAnggota, setDataAnggota] = useState<Members | null | undefined>(
     undefined,
   );
-  const createMutation = useCreateAnggotaMutation();
-  const updateMutation = useUpdateAnggotaMutation();
-  const deleteMutation = useDeleteAnggotaMutation();
-  const { data, isLoading } = useAnggotaQuery();
+  const createMutation = useCreateMemberMutation();
+  const updateMutation = useUpdateMemberMutation();
+  const deleteMutation = useDeleteMemberMutation();
+  const { data, isLoading } = useMembersQuery();
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
         <div className="flex flex-col ">
-          <h1 className="text-2xl font-medium ">Anggota</h1>
+          <h1 className="text-2xl font-medium ">Members</h1>
           <p className="text-muted">Kelola data anggota perpustaakan.</p>
         </div>
         <div className="flex items-center ">
           <Button onClick={() => setDataAnggota(null)} variant="primary">
-            + Tambah Anggota
+            + Add Members
           </Button>
           {dataAnggota !== undefined && (
             <Modal
@@ -63,11 +63,11 @@ export default function Page() {
       </div>
       {isLoading && (
         <div>
-          <h1>sedang menunggu data</h1>
+          <h1>Fetching Data...</h1>
         </div>
       )}
       {!isLoading && (
-        <Table<Anggota>
+        <Table<Members>
           data={data ?? []}
           keyFor={(p) => String(p.id)}
           column={[
@@ -76,12 +76,12 @@ export default function Page() {
               content: (c) => c.id,
             },
             {
-              header: "No. Anggota",
-              content: (c) => c.no_anggota,
+              header: "No. Members",
+              content: (c) => c.membership_number,
             },
             {
-              header: "Nama",
-              content: (c) => c.nama,
+              header: "Name",
+              content: (c) => c.name,
             },
             {
               header: "Alumni",
@@ -112,7 +112,7 @@ export default function Page() {
                     }}
                     variant="warning"
                   >
-                    Hapus
+                    Delete
                   </Button>
                 </div>
               ),

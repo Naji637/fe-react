@@ -6,8 +6,11 @@ import { checkStatus } from "./helper/checkStatus";
 import Table from "@/components/Table";
 
 import { useBooksQuery } from "@/hooks/useBook";
-import { usePinjamanDashboard, usePinjamanQuery } from "@/hooks/useBorrowing";
-import { useAnggotaQuery } from "@/hooks/useMember";
+import {
+  useBorrowingsDashboard,
+  useBorrowingsQuery,
+} from "@/hooks/useBorrowing";
+import { useMembersQuery } from "@/hooks/useMember";
 import { useMemo } from "react";
 
 export interface TableData {
@@ -20,16 +23,16 @@ export interface TableData {
 }
 
 export default function Home() {
-  const { data: dataAnggota } = useAnggotaQuery();
+  const { data: dataAnggota } = useMembersQuery();
   const { data: bookData } = useBooksQuery();
-  const { data: dataPinjaman } = usePinjamanDashboard();
+  const { data: dataPinjaman } = useBorrowingsDashboard();
   const tableData = useMemo<TableData[]>(() => {
     if (!dataPinjaman) return [];
 
     return dataPinjaman.map((p, index) => ({
       id: index + 1,
-      anggota: dataAnggota?.find((a) => a.id === p.anggota_id)?.nama || "",
-      buku: bookData?.find((b) => b.id === p.buku_id)?.title || "",
+      anggota: dataAnggota?.find((a) => a.id === p.member_id)?.name || "",
+      buku: bookData?.find((b) => b.id === p.book_id)?.title || "",
       // tgl_pinjam: p.tgl_pinjam || "",
       // jatuh_tempo: p.tgl_balik || "",
       status: p.status || "",
