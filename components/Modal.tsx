@@ -34,7 +34,7 @@ export default function Modal({
   const { data, isLoading } = useGetMemberClassificationsQuery();
   useEffect(() => {
     (function setInitialMemberClassificationId() {
-      setMemberClassificationId(()=>String(data?.[0].id))
+      if (data !== undefined) { setMemberClassificationId(() =>data.length!==0? String(data?.[0].id):'') }
     })()
   },[data])
   function handleSubmit(e: React.SubmitEvent) {

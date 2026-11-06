@@ -6,35 +6,46 @@ import TextField from "@/components/TextField";
 import axios from "axios";
 
 import {
-  Buku,
-  RequestUpdateTglBalik,
-  useBukuHubQuery,
-  useCreatePinjamanMutation,
-  usePinjamanQuery,
-  useUpdateTglBalikMutation,
+  Book,
+  RequestUpdateReturnDate,
+  useBookHubQuery,
+  useCreateBorrowingMutation,
+  useBorrowingsQuery,
+  useUpdateReturnDateMutation,
 } from "@/hooks/useBorrowing";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { showDate } from "../helper/dateIndo";
 import ModalTglBalik from "@/components/ModalTglBalik";
 
 import ModalError from "@/components/ModalError";
 import { useGetKondisiByBarcode } from "@/hooks/useBook";
+import { useConditionsQuery } from "@/hooks/useCondition";
+import { log } from "console";
+
 export default function Page() {
   const [noAnggota, setNoAnggota] = useState<string>("");
   const [dataTglBalik, setDataTglBalik] = useState<
-    RequestUpdateTglBalik | null | undefined
+    RequestUpdateReturnDate | null | undefined
   >(undefined);
-  const [PinjamanId, setPinjamanId] = useState<number | null>(null);
-  const { data, isLoading } = usePinjamanQuery(noAnggota);
+  const [PinjamanId, setPinjamanId] = useState<string | null>(null);
+  const { data, isLoading } = useBorrowingsQuery(noAnggota);
   const [barcode, setBarcode] = useState<string>("");
-  const { data: dataBuku } = useBukuHubQuery(barcode);
-  const createPinjaman = useCreatePinjamanMutation();
-  const updateTglBalik = useUpdateTglBalikMutation();
+  const { data: dataBuku } = useBookHubQuery(barcode);
+  const createPinjaman = useCreateBorrowingMutation();
+  const updateTglBalik = useUpdateReturnDateMutation();
   const [messageError, setMessageError] = useState<string | null>(null);
   const { data: dataKondisiByBarcode, isLoading: isLoadingKondisi } =
     useGetKondisiByBarcode(barcode);
-
+  const {data:dataCondition}=useConditionsQuery()
+  const [returnConditionId, setReturnConditionId] = useState("")
+  useEffect(() => {
+    (function setInitialReturnConditionId() {
+      if (dataCondition !== undefined) {
+        setReturnConditionId(() =>dataCondition.length!==0 ? String(dataCondition?.[0].id):"")
+        }
+    })()
+  },[dataCondition])
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -61,7 +72,7 @@ export default function Page() {
               }}
             />
             <div className="text-xl font-medium ">
-              {data?.nama !== undefined && <div>{data.nama}</div>}
+              {data?.name !== undefined && <div>{data.name}</div>}
             </div>
           </div>
 
@@ -74,7 +85,7 @@ export default function Page() {
                 {
                   updateTglBalik.mutate(
                     {
-                      id: Number(PinjamanId),
+                      id:String(PinjamanId),
                       payload,
                     },
                     { onSuccess: () => setDataTglBalik(undefined) },
@@ -94,7 +105,7 @@ export default function Page() {
                 }}
               />
               <div className="text-xl font-medium ">
-                {dataBuku?.judul !== undefined && <div>{dataBuku.judul}</div>}
+                {dataBuku?.title !== undefined && <div>{dataBuku.title}</div>}
               </div>
             </div>
 
@@ -102,12 +113,12 @@ export default function Page() {
               onClick={() =>
                 createPinjaman.mutate(
                   {
-                    anggota_id: data!.id,
-                    buku_id: dataBuku!.id,
-                    petugas_pinjam_id: null,
-                    petugas_balik_id: null,
-                    kondisi_awal_id: dataKondisiByBarcode!.list_kondisi_id,
-                    kondisi_akhir_id: 1,
+                    member_id: data!.id,
+                    book_id: dataBuku!.id,
+                    borrow_officer_id: null,
+                    return_officer_id: null,
+                    borrow_condition_id: dataKondisiByBarcode!.condition_id,
+                    return_condition_id: returnConditionId,
                     status: "dipinjam",
                   },
                   {
@@ -132,15 +143,15 @@ export default function Page() {
             />
           )}
           <div className="w-screen">
-            <Table<Buku>
-              data={data?.buku ?? []}
+            <Table<Book>
+              data={data?.book ?? []}
               keyFor={(p) => String(p.id)}
               column={[
                 { header: "No", content: (_, i) => i + 1 },
-                { header: "Judul", content: (c, _) => c.judul },
+                { header: "title", content: (c, _) => c.title },
                 {
                   header: "Tanggal Pinjam",
-                  content: (c, _) => showDate(c.tgl_pinjam),
+                  content: (c, _) => showDate(c.borrow_date),
                 },
                 {
                   header: "Tanggal Balik",

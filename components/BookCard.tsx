@@ -1,12 +1,13 @@
 import React, { use, useState } from "react";
 
 import { Books, useBooksQuery } from "@/hooks/useBook";
+import {CreateBarcode } from "@/hooks/useBookHub";
 import { useCategoriesQuery } from "@/hooks/useCategory";
 import Button from "./Button";
 
 interface BookCardProps {
   book: Books;
-  updateBookHub?: (bookId: string) => void;
+  createBarcode?: (books:Books) => void;
   updateBook?: (books: Books) => void;
   deleteBook?: (id: string) => void;
 }
@@ -15,7 +16,7 @@ export default function BookCard({
   book,
   deleteBook,
   updateBook,
-  updateBookHub,
+  createBarcode,
 }: BookCardProps) {
   return (
     <div className="max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
@@ -45,7 +46,7 @@ export default function BookCard({
       </div>
 
       <div className="flex justify-end gap-2 pt-3 border-t border-gray-100 ">
-        <Button onClick={() => updateBookHub?.(book.id)} variant="primary">
+        <Button onClick={() => createBarcode?.(book)} variant="primary">
           Create Barcode
         </Button>
 

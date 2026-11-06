@@ -12,7 +12,7 @@ import {
   useDeleteBookMutation,
   useUpdateBookMutation,
 } from "@/hooks/useBook";
-import { BookHub } from "@/hooks/useBookHub";
+import { CreateBarcode} from "@/hooks/useBookHub";
 import React, { useState } from "react";
 
 export default function Page() {
@@ -21,10 +21,12 @@ export default function Page() {
   const deleteMutation = useDeleteBookMutation();
   const createMutation = useCreateBookMutation();
   const updateMutation = useUpdateBookMutation();
+  const [bookIdBarcode,setBookIdBarcode]=useState<string|undefined>(undefined)
   const [bookData, setBookData] = useState<Books | null | undefined>(undefined)
-  const [bookHubData, setBookHubData] = useState<BookHub | null | undefined>(
+  const [bookHubData, setBookHubData] = useState<CreateBarcode| null | undefined>(
     undefined,
   );
+
   // const [booksId, setBooksId] = useState<string | null>(null);
   if (isLoading) {
     return (
@@ -40,6 +42,7 @@ export default function Page() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-800">
             Books List
+            {bookIdBarcode}
           </h1>
         </div>
         <Button onClick={() => setBookData(null)} variant="primary">
@@ -52,9 +55,9 @@ export default function Page() {
           <BookCard
             key={book.id}
             book={book}
-            updateBookHub={(booksId) => {
-              setBookHubData(null);
-            }}
+            createBarcode={(item) => setBookIdBarcode(item.id)}
+
+
             updateBook={(item) => setBookData(item)}
             deleteBook={(id) => deleteMutation.mutate(id)}
           />
@@ -80,20 +83,20 @@ export default function Page() {
           }}
         />
       )}
-      {bookHubData !== undefined && (
+      {bookIdBarcode !== undefined && (
         <ModalBarcode
-          initial={bookHubData}
+          bookId={String(bookIdBarcode)}
           isSubmiting={createBarcode.isPending}
-          onClose={() => setBookHubData(undefined)}
+          onClose={() => setBookIdBarcode(undefined)}
           onSubmit={(payload) => {
             {
-              // createBarcode.mutate(
-              //   {
-              //     payload,
-              // booksId: booksId,
-              //   },
-              //   { onSuccess: () => setBookHubData(undefined) },
-              // );
+              createBarcode.mutate(
+                {
+                  payload,
+
+                },
+                { onSuccess: () => setBookIdBarcode(undefined) },
+              );
             }
           }}
         />

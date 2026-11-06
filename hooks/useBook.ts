@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookHub,CreateBookHub } from "./useBookHub";
+import { BookHub,CreateBarcode } from "./useBookHub";
 
 const BOOKS_KEY = ["books"];
 
@@ -33,10 +33,10 @@ async function deleteBook(id: string): Promise<void> {
   await api.delete(`/books/${id}`);
 }
 async function createBarcode(
-  payload: CreateBookHub,
-  bookId: string,
+  payload: CreateBarcode,
+
 ): Promise<void> {
-  await api.put(`/books/${bookId}/register`, payload);
+  await api.post(`/books/barcode`, payload);
 }
 async function getKondisiByBarcode(barcode: string): Promise<BookHub> {
   const res = await api.get(`/books/kondisi/search?q=${barcode}`);
@@ -86,12 +86,11 @@ export function useCreateBarcode() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({
-      bukuId,
       payload,
     }: {
-      payload: CreateBookHub;
-      bukuId: string;
-    }) => createBarcode(payload, bukuId),
+      payload: CreateBarcode;
+
+    }) => createBarcode(payload),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: BOOKS_KEY }),
   });
 }

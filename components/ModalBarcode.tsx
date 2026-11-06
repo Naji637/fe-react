@@ -1,17 +1,18 @@
-import { BookHub, CreateBookHub } from "@/hooks/useBookHub";
+import { BookHub, CreateBarcode} from "@/hooks/useBookHub";
 import { useEffect, useState } from "react";
 import TextField from "./TextField";
 import SelectBox, { DataProps } from "./SelectBox";
 import { Conditions, useConditionsQuery } from "@/hooks/useCondition";
 
 import Button from "./Button";
-import { useGetNoAnggotaQuery } from "@/hooks/useMember";
+// import { useGetNoAnggotaQuery } from "@/hooks/useMember";
 import { Shelves, useShelvesQuery } from "@/hooks/useShelf";
 
 interface ModalBarcodeProps {
+  bookId :string
   onClose: () => void;
   isSubmiting: boolean;
-  onSubmit: (payload: CreateBookHub) => void;
+  onSubmit: (payload: CreateBarcode) => void;
 }
 
 function convertToDataSelect(data: Conditions[]): DataProps[] {
@@ -32,18 +33,19 @@ function convertToDataSelectForShelves(data: Shelves[]): DataProps[] {
 export default function ModalBarcode({
   isSubmiting,
   onClose,
-  onSubmit,
+  onSubmit,bookId
 }: ModalBarcodeProps) {
   const { data: dataConditions, isLoading } = useConditionsQuery();
   const { data: dataShelves } = useShelvesQuery();
   const [conditionsId, setConditionsId] = useState("");
   const [shelfId, setShelfId] = useState("");
   const [membershipNumber, setMembershipNumber] = useState("");
+  const [price,setPrice]=useState(0)
 
   useEffect(() => {
     (function setInitialBookHub() {
-      setConditionsId(() => String(dataConditions?.[0].id));
-      setShelfId(() => String(dataShelves?.[0].id));
+     if(dataConditions!==undefined) setConditionsId(() =>dataConditions.length!==0  ? String(dataConditions?.[0].id):"");
+      if(dataShelves!==undefined)setShelfId(() =>dataShelves.length!==0 ? String(dataShelves?.[0].id):"");
     })();
   }, [dataConditions, dataShelves]);
 
@@ -54,9 +56,11 @@ export default function ModalBarcode({
       temp = membershipNumber;
     }
     onSubmit({
+      book_id:bookId,
       condition_id: conditionsId,
       shelf_id: shelfId,
       membership_number: temp,
+      price:Number(price)
     });
   }
 
@@ -92,6 +96,11 @@ export default function ModalBarcode({
                   value={membershipNumber}
                   onChange={(value) => setMembershipNumber(value as string)}
                   label="Membership Number"
+                />
+                <TextField
+                  value={price}
+                  onChange={(value) => setPrice(value as number)}
+                  label="Price"
                 />
 
                 <div className="flex justify-end">

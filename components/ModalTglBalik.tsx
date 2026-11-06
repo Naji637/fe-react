@@ -2,21 +2,21 @@
 
 import React, { useEffect, useState } from "react";
 import Button from "./Button";
-import { RequestUpdateTglBalik } from "@/hooks/useBorrowing";
+import { RequestUpdateReturnDate } from "@/hooks/useBorrowing";
 import SelectBox, { DataProps } from "./SelectBox";
-import { ListKondisi, useListKondisiQuery } from "@/hooks/useCondition";
+import { Conditions, useConditionsQuery } from "@/hooks/useCondition";
 
 interface ModalProps {
-  initial: RequestUpdateTglBalik | null;
+  initial: RequestUpdateReturnDate | null;
   onClose: () => void;
   isSubmiting: boolean;
-  onSubmit: (payload: RequestUpdateTglBalik) => void;
+  onSubmit: (payload: RequestUpdateReturnDate) => void;
 }
 
-function convertToDataSelect(data: ListKondisi[]): DataProps[] {
+function convertToDataSelect(data: Conditions[]): DataProps[] {
   const dataSelectBox: DataProps[] = [];
   data.map((item) => {
-    dataSelectBox.push({ label: item.kondisi, value: String(item.id) });
+    dataSelectBox.push({ label: item.condition, value: String(item.id) });
   });
   return dataSelectBox;
 }
@@ -30,7 +30,7 @@ export default function ModalTglBalik({
   const [status, setStatus] = useState(
     initial ? initial.status : "dikembalikan",
   );
-  const { data, isLoading } = useListKondisiQuery();
+  const { data, isLoading } = useConditionsQuery();
   const [kondisiAkhir, setKondisiAkhir] = useState("");
   useEffect(() => {
     (function setInitialKondisiAkhir() {
@@ -42,7 +42,7 @@ export default function ModalTglBalik({
   function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
     onSubmit({
-      kondisi_akhir_id: kondisiAkhir,
+      return_condition_id: kondisiAkhir,
       status: status,
     });
   }

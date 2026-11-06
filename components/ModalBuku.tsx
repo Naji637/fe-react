@@ -32,7 +32,7 @@ export default function ModalBuku({
   const [CategoriesId, setCategoriesId] = useState("");
   useEffect(() => {
     (function setInitialCategoriesId() {
-      setCategoriesId(() => String(dataCategories?.[0].id));
+     if(dataCategories!==undefined) setCategoriesId(() =>dataCategories.length!==0 ? String(dataCategories?.[0].id):"");
     })();
   }, [dataCategories]);
   const [author, setAuthor] = useState(initial ? initial.author : "");
