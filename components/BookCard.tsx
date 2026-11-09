@@ -1,9 +1,10 @@
-import React, { use, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 
 import { Books, useBooksQuery } from "@/hooks/useBook";
 import {CreateBarcode } from "@/hooks/useBookHub";
-import { useCategoriesQuery } from "@/hooks/useCategory";
+import { useCategoriesQuery, useGetCategoryById } from "@/hooks/useCategory";
 import Button from "./Button";
+import { log } from "node:console";
 
 interface BookCardProps {
   book: Books;
@@ -18,6 +19,8 @@ export default function BookCard({
   updateBook,
   createBarcode,
 }: BookCardProps) {
+  const category = useGetCategoryById(book.category_id)
+// console.log(category)
   return (
     <div className="max-w-sm rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all hover:shadow-md">
       <div className="mb-3 flex items-start justify-between">
@@ -38,7 +41,7 @@ export default function BookCard({
             <div>
               <div className="font-medium text-gray-500">{book.author}</div>
               <div className="inline-block bg-gray-100 px-2 py-0.5 rounded text-xs font-mono">
-                {/*{booksData.}*/}
+                {category.data?.category}
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@
 import BookCard from "@/components/BookCard";
 import Button from "@/components/Button";
 import ModalBarcode from "@/components/ModalBarcode";
-import ModalBuku from "@/components/ModalBuku";
+import BookModal from "@/components/BookModal";
 import {
   Books,
   useBooksQuery,
@@ -65,7 +65,7 @@ export default function Page() {
       </div>
 
       {bookData !== undefined && (
-        <ModalBuku
+        <BookModal
           initial={bookData}
           isSubmiting={createMutation.isPending || updateMutation.isPending}
           onClose={() => setBookData(undefined)}

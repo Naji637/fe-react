@@ -5,7 +5,7 @@ import TextField from "./TextField";
 import Button from "./Button";
 import SelectBox, { DataProps } from "./SelectBox";
 
-interface ModalBukuProps {
+interface BookModalProps {
   initial: Books | null | undefined;
   onClose: () => void;
   isSubmiting: boolean;
@@ -20,12 +20,12 @@ function convertToDataSelect(data: Categories[]): DataProps[] {
   return dataSelectBox;
 }
 
-export default function ModalBuku({
+export default function BookModal({
   isSubmiting,
   initial,
   onClose,
   onSubmit,
-}: ModalBukuProps) {
+}: BookModalProps) {
   const [title, setTitle] = useState(initial ? initial.title : "");
   const { data: dataCategories, isLoading } = useCategoriesQuery();
 
