@@ -18,8 +18,8 @@ const navItems = [
     icon: IconDashboard,
   },
   {
-    href: "/anggota",
-    label: "Anggota",
+    href: "/members",
+    label: "Members",
     icon: IconAnggota,
   },
   {
@@ -28,8 +28,8 @@ const navItems = [
     icon: IconBuku,
   },
   {
-    href: "/peminjaman",
-    label: "Peminjaman",
+    href: "/borrowings",
+    label: "Borrowings",
     icon: IconPeminjaman,
   },
 ];
