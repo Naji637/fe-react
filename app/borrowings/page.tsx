@@ -12,6 +12,7 @@ import {
   useCreateBorrowingMutation,
   useBorrowingsQuery,
   useUpdateReturnDateMutation,
+  BookHub,
 } from "@/hooks/useBorrowing";
 
 import React, { useEffect, useState } from "react";
@@ -143,8 +144,8 @@ export default function Page() {
             />
           )}
           <div className="w-screen">
-            <Table<Book>
-              data={data?.book ?? []}
+            <Table<BookHub>
+              data={data?.book_hub ?? []}
               keyFor={(p) => String(p.id)}
               column={[
                 { header: "No", content: (_, i) => i + 1 },
@@ -154,18 +155,8 @@ export default function Page() {
                   content: (c, _) => showDate(c.borrow_date),
                 },
                 {
-                  header: "Tanggal Balik",
-                  content: (c, _) => (
-                    <Button
-                      onClick={() => {
-                        setPinjamanId(c.id);
-                        setDataTglBalik(null);
-                      }}
-                      variant="primary"
-                    >
-                      kembalikan
-                    </Button>
-                  ),
+                  header: "Book's Condition",
+                  content: (c, _) => c.borrow_condition,
                 },
               ]}
             ></Table>

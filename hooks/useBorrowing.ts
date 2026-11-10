@@ -10,13 +10,27 @@ export interface Book {
   return_date: string;
 }
 
-export interface Borrowings {
-  id: string;
-  membership_number: string;
-  name: string;
-  isAllowed: boolean;
-  book: Book[];
+// export interface Borrowings {
+//   id: string;
+//   membership_number: string;
+//   name: string;
+//   isAllowed: boolean;
+//   book: Book[];
+// }
+
+export interface Borrowings{
+  id: string
+  name: string
+  book_hub: BookHub[]
 }
+
+export interface BookHub{
+  id: string
+  title: string
+  borrow_date: string
+  borrow_condition: string
+}
+
 export interface BorrowingRequest {
   member_id: string;
   book_id: string;
@@ -68,7 +82,7 @@ export function useBorrowingsQuery(membershipNumber: string) {
   return useQuery<Borrowings| null>({
     queryKey: [...BORROWINGS_KEY, membershipNumber],
     queryFn: () => getBorrowingsByMembershipNumber(membershipNumber),
-    enabled: membershipNumber.length === 4,
+    enabled: membershipNumber.length === 9,
   });
 }
 
