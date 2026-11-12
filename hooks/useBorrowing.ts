@@ -47,19 +47,23 @@ export interface Condition{
   condition:string
 }
 
-
 export interface BorrowingRequest {
-  member_id: string;
-  book_id: string;
-  borrow_officer_id: string | null;
-  return_officer_id: string | null;
-  borrow_condition_id: string;
-  return_condition_id: string;
-  status: string;
+  member_id:string
+  books: BorrowingBookRequest[]
 }
+
+export interface BorrowingBookRequest{
+  book_hub_id:string
+}
+
 export interface RequestUpdateReturnDate {
   return_condition_id: string;
-  status: string;
+}
+
+export interface ManageBorrowingBooks{
+  id:string
+  title: string
+  condition:string
 }
 async function getBorrowingsByMembershipNumber(
   membershipNumber: string,

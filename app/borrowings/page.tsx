@@ -24,14 +24,15 @@ import ModalError from "@/components/ModalError";
 import { useGetKondisiByBarcode } from "@/hooks/useBook";
 import { useConditionsQuery } from "@/hooks/useCondition";
 import { log } from "console";
+import { ModalManage } from "@/components/ModalManage";
 
 export default function Page() {
-  const [noAnggota, setNoAnggota] = useState<string>("");
+  const [membershipNumber, setMembershipNumber] = useState<string>("");
   const [dataTglBalik, setDataTglBalik] = useState<
     RequestUpdateReturnDate | null | undefined
   >(undefined);
   const [PinjamanId, setPinjamanId] = useState<string | null>(null);
-  const { data, isLoading } = useBorrowingsQuery(noAnggota);
+  const { data, isLoading } = useBorrowingsQuery(membershipNumber);
   const [barcode, setBarcode] = useState<string>("");
   const { data: dataBuku } = useBookHubQuery(barcode);
   const createPinjaman = useCreateBorrowingMutation();
@@ -41,6 +42,7 @@ export default function Page() {
     useGetKondisiByBarcode(barcode);
   const {data:dataCondition}=useConditionsQuery()
   const [returnConditionId, setReturnConditionId] = useState("")
+  const [isOpen,setIsOpen]=useState(false)
   useEffect(() => {
     (function setInitialReturnConditionId() {
       if (dataCondition !== undefined) {
@@ -70,10 +72,10 @@ export default function Page() {
         <div className="flex flex-col gap-5 w-screen">
           <div className="flex items-end gap-4">
             <TextField
-              label="No. Anggota"
-              value={noAnggota}
+              label="Membership Number"
+              value={membershipNumber}
               onChange={(value) => {
-                setNoAnggota(value as string);
+                setMembershipNumber(value as string);
               }}
             />
             <div className="text-xl font-medium ">
@@ -102,44 +104,22 @@ export default function Page() {
 
           <div className="flex items-end gap-20">
             <div className="flex items-end gap-4">
-              <TextField
-                label="Kode Buku"
-                value={barcode}
-                onChange={(value) => {
-                  setBarcode(value as string);
-                }}
-              />
+
               <div className="text-xl font-medium ">
                 {dataBuku?.title !== undefined && <div>{dataBuku.title}</div>}
               </div>
             </div>
 
             <Button
-              onClick={() =>
-                createPinjaman.mutate(
-                  {
-                    member_id: data!.id,
-                    book_id: dataBuku!.id,
-                    borrow_officer_id: null,
-                    return_officer_id: null,
-                    borrow_condition_id: dataKondisiByBarcode!.condition_id,
-                    return_condition_id: returnConditionId,
-                    status: "dipinjam",
-                  },
-                  {
-                    onError: (error) => {
-                      if (axios.isAxiosError(error)) {
-                        setMessageError(error.response?.data.message);
-                      }
-                    },
-                  },
-                )
-              }
+              onClick={()=>setIsOpen(!isOpen)}
               type="submit"
               variant="primary"
             >
-              + Tambah Buku
+              Manage
             </Button>
+            {isOpen && (<ModalManage
+                onClose={()=>setIsOpen(false)}
+            />)}
           </div>
           {messageError !== null && (
             <ModalError

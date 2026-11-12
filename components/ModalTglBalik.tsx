@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Button from "./Button";
 import { RequestUpdateReturnDate } from "@/hooks/useBorrowing";
 import SelectBox, { DataProps } from "./SelectBox";
-import { Conditions, useConditionsQuery } from "@/hooks/useCondition";
 
 interface ModalProps {
   initial: RequestUpdateReturnDate | null;
@@ -13,13 +12,7 @@ interface ModalProps {
   onSubmit: (payload: RequestUpdateReturnDate) => void;
 }
 
-function convertToDataSelect(data: Conditions[]): DataProps[] {
-  const dataSelectBox: DataProps[] = [];
-  data.map((item) => {
-    dataSelectBox.push({ label: item.condition, value: String(item.id) });
-  });
-  return dataSelectBox;
-}
+
 
 export default function ModalTglBalik({
   onClose,
@@ -30,25 +23,9 @@ export default function ModalTglBalik({
   const [status, setStatus] = useState(
     initial ? initial.status : "dikembalikan",
   );
-  const { data, isLoading } = useConditionsQuery();
-  const [kondisiAkhir, setKondisiAkhir] = useState("");
-  useEffect(() => {
-    (function setInitialKondisiAkhir() {
-      setKondisiAkhir(() => String(data?.[0].id));
-    })();
-    // setInitialKondisiAkhir();
-  }, [data]);
 
-  function handleSubmit(e: React.SubmitEvent) {
-    e.preventDefault();
-    onSubmit({
-      return_condition_id: kondisiAkhir,
-      status: status,
-    });
-  }
-  if (isLoading) {
-    return <div>loading...</div>;
-  }
+
+
 
   return (
     <div className="p-5 ">
@@ -56,32 +33,7 @@ export default function ModalTglBalik({
         <div className="bg-white p-5 rounded-[8px] min-w-75 ">
           <button onClick={() => onClose()}>X</button>
           <div className="gap-7 px-8 py-5">
-            <form className="flex flex-col gap-7 " onSubmit={handleSubmit}>
-              <SelectBox
-                value={kondisiAkhir}
-                onChange={(value) => {
-                  setKondisiAkhir(value);
-                }}
-                data={convertToDataSelect(data!)}
-                label="Kondisi Buku"
-              />
-              <SelectBox
-                value={status}
-                onChange={(value) => {
-                  setStatus(value);
-                }}
-                data={[
-                  { label: "dikembalikan", value: "dikembalikan" },
-                  { label: "terlambat", value: "terlambat" },
-                ]}
-                label="Status"
-              />
-              <div className="flex justify-end">
-                <Button type="submit" disabled={isSubmiting} variant="primary">
-                  {isSubmiting ? "Menyimpan..." : "Simpan"}
-                </Button>
-              </div>
-            </form>
+
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ interface ModalProps {
 }
 
 function convertToDataSelect(data: MemberClassifications[]): DataProps[] {
-  let dataSelectBox: DataProps[] = [];
+  const dataSelectBox: DataProps[] = [];
   data.map((item) => {
     dataSelectBox.push({ label: item.classification, value: String(item.id) });
   });

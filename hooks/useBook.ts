@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { BookHub,CreateBarcode } from "./useBookHub";
+import {CreateBarcode } from "./useBookHub";
 
 const BOOKS_KEY = ["books"];
 
@@ -38,7 +38,7 @@ async function createBarcode(
 ): Promise<void> {
   await api.post(`/books/barcode`, payload);
 }
-async function getKondisiByBarcode(barcode: string): Promise<BookHub> {
+async function getKondisiByBarcode(barcode: string): Promise<CreateBarcode> {
   const res = await api.get(`/books/kondisi/search?q=${barcode}`);
   return res.data;
 }
@@ -95,7 +95,7 @@ export function useCreateBarcode() {
   });
 }
 export function useGetKondisiByBarcode(barcode: string) {
-  return useQuery<BookHub>({
+  return useQuery<CreateBarcode>({
     queryKey: [...BOOKS_KEY, barcode],
     queryFn: () => getKondisiByBarcode(barcode),
     enabled: barcode.length === 4,
