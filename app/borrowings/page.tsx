@@ -13,6 +13,7 @@ import {
   useBorrowingsQuery,
   useUpdateReturnDateMutation,
   BookHub,
+  Borrowing,
 } from "@/hooks/useBorrowing";
 
 import React, { useEffect, useState } from "react";
@@ -46,7 +47,10 @@ export default function Page() {
         setReturnConditionId(() =>dataCondition.length!==0 ? String(dataCondition?.[0].id):"")
         }
     })()
-  },[dataCondition])
+  }, [dataCondition])
+
+  console.log("data", data?.borrowing)
+ console.log(data ===undefined ? []: data?.borrowing !== null ? data?.borrowing:[])
   return (
     <div className="flex flex-col">
       <div className="flex justify-between p-5 ">
@@ -144,22 +148,23 @@ export default function Page() {
             />
           )}
           <div className="w-screen">
-            <Table<BookHub>
-              data={data?.book_hub ?? []}
+            <Table<Borrowing>
+              data={data ===undefined ? []: data?.borrowing !== null && data?.borrowing !== undefined ? data.borrowing:[]}
               keyFor={(p) => String(p.id)}
               column={[
                 { header: "No", content: (_, i) => i + 1 },
-                { header: "title", content: (c, _) => c.title },
+                { header: "title", content: (c, _) => c.book_hub.book.title },
                 {
                   header: "Tanggal Pinjam",
                   content: (c, _) => showDate(c.borrow_date),
                 },
                 {
                   header: "Book's Condition",
-                  content: (c, _) => c.borrow_condition,
+                  content: (c, _) => c.condition.condition,
                 },
               ]}
             ></Table>
+
           </div>
         </div>
       </div>

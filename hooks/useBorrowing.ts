@@ -3,6 +3,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const BORROWINGS_KEY = ["borrowings"];
 
+
+
+
+
+
 export interface Book {
   id: string;
  title: string;
@@ -21,15 +26,27 @@ export interface Book {
 export interface Borrowings{
   id: string
   name: string
-  book_hub: BookHub[]
+  borrowing: Borrowing[]
+
+}
+export interface Borrowing{
+  id: string
+  borrow_date: string
+  book_hub: BookHub
+  condition: Condition
 }
 
 export interface BookHub{
-  id: string
-  title: string
-  borrow_date: string
-  borrow_condition: string
+  book: BorrowingBooks
 }
+export interface BorrowingBooks{
+  id: string
+  title:string
+}
+export interface Condition{
+  condition:string
+}
+
 
 export interface BorrowingRequest {
   member_id: string;
